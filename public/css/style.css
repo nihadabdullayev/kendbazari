@@ -328,6 +328,10 @@ button, input, select, textarea {
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-md);
+  }
+  
   .menu-toggle {
     display: flex;
   }
