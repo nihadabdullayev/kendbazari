@@ -139,7 +139,7 @@
         <a href="/butun-mehsullar/" class="btn btn--secondary btn--sm" style="border-radius: var(--radius-md);">Hamısına Bax</a>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--spacing-xl);" id="featured-products-grid">
+      <div class="products-grid" id="featured-products-grid">
         <!-- Rendered dynamically -->
       </div>
     </section>
@@ -253,10 +253,11 @@
           const imgSecondary = product.images[1] || product.image;
           const saleBadge = product.oldPrice ? `<span class="badge badge--sale" style="font-size: 0.65rem; padding: 2px 6px;">-${Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%</span>` : '';
           const oldPriceHtml = product.oldPrice ? `<span class="product-card__old-price">${product.oldPrice.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN</span>` : '';
+          const productUrl = `/${window.mockDB.categories.find(c => c.id === product.category).slug}/${product.slug}/`;
           
           return `
-            <div class="product-card">
-              <a href="/${window.mockDB.categories.find(c => c.id === product.category).slug}/${product.slug}/">
+            <div class="product-card" onclick="if (!event.target.closest('.product-card__actions') && !event.target.closest('button')) window.location.href='${productUrl}'">
+              <a href="${productUrl}">
                 <div class="product-card__image-container">
                   <div class="product-card__rating-badge">⭐ ${product.rating} <span>(${product.reviewsCount})</span></div>
                   <img class="product-card__image product-card__image-primary" src="${product.image}" alt="${product.title}" loading="lazy">
@@ -272,7 +273,7 @@
               <div class="product-card__content">
                 <div class="product-card__category">${window.mockDB.categories.find(c => c.id === product.category).name}</div>
                 <h3 class="product-card__title">
-                  <a href="/${window.mockDB.categories.find(c => c.id === product.category).slug}/${product.slug}/">${product.title}</a>
+                  <a href="${productUrl}">${product.title}</a>
                 </h3>
                 <div class="product-card__price-wrapper" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                   <span class="product-card__price">${product.price.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN</span>

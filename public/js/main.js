@@ -192,7 +192,6 @@ function addToCart(productId, quantity = 1, options = {}) {
 
   saveCart(cart);
   
-  showToast(`${product.title} səbətə əlavə olundu!`);
   if (window.openCartDrawer) window.openCartDrawer();
   renderCartItems();
 }
