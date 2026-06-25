@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel | Kənd Bazarı</title>
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    :root {
+      --admin-bg: #0f172a;
+      --admin-card-bg: rgba(30, 41, 59, 0.7);
+      --admin-border: rgba(255, 255, 255, 0.08);
+      --admin-text: #f8fafc;
+      --admin-text-muted: #94a3b8;
+    }
+
+    body.admin-body {
+      background-color: var(--admin-bg);
+      color: var(--admin-text);
+      font-family: var(--font-sans);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .admin-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .admin-sidebar {
+      width: 260px;
+      background-color: rgba(15, 23, 42, 0.95);
+      border-right: 1px solid var(--admin-border);
+      padding: var(--spacing-xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      backdrop-filter: blur(10px);
+      flex-shrink: 0;
+    }
+
+    .admin-logo {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-decoration: none;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .admin-logo span {
+      color: var(--text-light);
+    }
+
+    .admin-nav {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .admin-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm) var(--spacing-md);
+      color: var(--admin-text-muted);
+      background: none;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      text-align: left;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all var(--transition-fast);
+    }
+
+    .admin-nav-btn:hover, .admin-nav-btn.active {
+      color: var(--admin-text);
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .admin-nav-btn.active {
+      border-left: 3px solid var(--primary);
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Content Area */
+    .admin-content {
+      flex: 1;
+      padding: var(--spacing-xl) var(--spacing-xxl);
+      overflow-y: auto;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-xl);
+      border-bottom: 1px solid var(--admin-border);
+      padding-bottom: var(--spacing-md);
+    }
+
+    .admin-title {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .admin-card {
+      background-color: var(--admin-card-bg);
+      border: 1px solid var(--admin-border);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      backdrop-filter: blur(10px);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .stat-card {
+      background-color: var(--admin-card-bg);
+      border: 1px solid var(--admin-border);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .stat-label {
+      color: var(--admin-text-muted);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary-light);
+    }
+
+    /* Table styles */
+    .admin-table-wrapper {
+      overflow-x: auto;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .admin-table th {
+      color: var(--admin-text-muted);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      padding: var(--spacing-md);
+      border-bottom: 1px solid var(--admin-border);
+    }
+
+    .admin-table td {
+      padding: var(--spacing-md);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.95rem;
+      vertical-align: middle;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .status-pending { background-color: rgba(234, 179, 8, 0.15); color: #facc15; }
+    .status-processing { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .status-shipping { background-color: rgba(168, 85, 247, 0.15); color: #c084fc; }
+    .status-delivered { background-color: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .status-cancelled { background-color: rgba(239, 68, 68, 0.15); color: #f87171; }
+
+    /* Login Box */
+    .admin-login-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: var(--admin-bg);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      padding: var(--spacing-xxl);
+    }
+
+    /* Forms */
+    .admin-form-group {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .admin-label {
+      display: block;
+      color: var(--admin-text-muted);
+      margin-bottom: var(--spacing-xs);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .admin-input {
+      width: 100%;
+      background-color: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--admin-border);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-sm) var(--spacing-md);
+      color: var(--admin-text);
+      font-size: 0.95rem;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .admin-input:focus {
+      border-color: var(--primary);
+    }
+
+    .btn-danger {
+      background-color: var(--error);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+
+    .action-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+  <!-- LOGIN SECTION -->
+  <div id="login-section" class="admin-login-wrapper">
+    <div class="admin-card login-card">
+      <h2 style="text-align: center; margin-bottom: var(--spacing-xl); font-family: var(--font-display);">Admin Panel Giriş</h2>
+      <form id="login-form">
+        <div class="admin-form-group">
+          <label class="admin-label" for="username">İstifadəçi adı</label>
+          <input type="text" id="username" class="admin-input" required value="admin">
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-label" for="password">Şifrə</label>
+          <input type="password" id="password" class="admin-input" required value="123">
+        </div>
+        <button type="submit" class="btn btn--primary btn--full" style="margin-top: var(--spacing-lg);">Giriş Et</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN ADMIN SYSTEM -->
+  <div id="admin-main-section" class="admin-container" style="display: none;">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <a href="/" class="admin-logo">Kənd<span>Bazarı</span></a>
+      <nav class="admin-nav">
+        <button class="admin-nav-btn active" id="btn-tab-dashboard" onclick="switchTab('dashboard')">📈 Dashboard</button>
+        <button class="admin-nav-btn" id="btn-tab-orders" onclick="switchTab('orders')">📦 Sifarişlər</button>
+        <button class="admin-nav-btn" id="btn-tab-products" onclick="switchTab('products')">🛒 Məhsullar</button>
+        <button class="admin-nav-btn" id="btn-tab-categories" onclick="switchTab('categories')">📁 Kateqoriyalar</button>
+        <button class="admin-nav-btn" id="btn-tab-producers" onclick="switchTab('producers')">👨‍🌾 İstehsalçılar</button>
+        <button class="admin-nav-btn" id="btn-tab-blogs" onclick="switchTab('blogs')">✍️ Bloglar</button>
+        <button class="admin-nav-btn" id="btn-tab-reviews" onclick="switchTab('reviews')">⭐ Rəylər</button>
+        <button class="admin-nav-btn" id="btn-tab-settings" onclick="switchTab('settings')">⚙️ Tənzimləmələr</button>
+      </nav>
+      <button class="admin-nav-btn" onclick="handleLogout()" style="margin-top: auto; color: var(--error);">🚪 Çıxış</button>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-content">
+      <header class="admin-header">
+        <h1 class="admin-title" id="page-tab-title">Dashboard</h1>
+        <div>Xoş gəldiniz, <strong>Admin</strong></div>
+      </header>
+
+      <!-- TAB: DASHBOARD -->
+      <section id="tab-dashboard" class="tab-content">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Cəmi Sifariş</span>
+            <span class="stat-value" id="stat-total-orders">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Ümumi Satış Gəliri</span>
+            <span class="stat-value" id="stat-total-revenue">0.00 AZN</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Məhsul Çeşidi</span>
+            <span class="stat-value" id="stat-total-products">0</span>
+          </div>
+        </div>
+        <div class="admin-card">
+          <h2 style="font-family: var(--font-display); margin-bottom: var(--spacing-md);">Son Sifarişlər</h2>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Sifariş ID</th>
+                  <th>Müştəri</th>
+                  <th>Məbləğ</th>
+                  <th>Tarix</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="dashboard-recent-orders"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: ORDERS -->
+      <section id="tab-orders" class="tab-content" style="display: none;">
+        <div class="admin-card">
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Müştəri</th>
+                  <th>Məhsullar</th>
+                  <th>Məbləğ</th>
+                  <th>Tarix</th>
+                  <th>Status</th>
+                  <th>Əməliyyat</th>
+                </tr>
+              </thead>
+              <tbody id="orders-list"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: ORDER DETAILS -->
+      <section id="tab-order-details" class="tab-content" style="display: none;">
+        <div class="action-row">
+          <h2 id="order-details-title" style="margin: 0; font-family: var(--font-display);">Sifariş Detalları</h2>
+          <button class="btn btn--secondary btn--sm" onclick="switchTab('orders')">⬅️ Siyahıya Qayıt</button>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: var(--spacing-lg);">
+          
+          <!-- Customer & Shipping Box -->
+          <div class="admin-card" style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+            <h3 style="margin-top:0; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; font-family: var(--font-display);">Müştəri Məlumatları</h3>
+            <div>
+              <p style="margin: 4px 0; font-size: 0.9rem; color: var(--admin-text-muted);">Ad Soyad:</p>
+              <strong id="order-cust-name" style="font-size: 1.1rem; color: var(--text-dark);">-</strong>
+            </div>
+            <div>
+              <p style="margin: 4px 0; font-size: 0.9rem; color: var(--admin-text-muted);">Telefon:</p>
+              <strong id="order-cust-phone" style="font-size: 1.1rem; color: var(--text-dark);">-</strong>
+            </div>
+            <div>
+              <p style="margin: 4px 0; font-size: 0.9rem; color: var(--admin-text-muted);">E-mail:</p>
+              <strong id="order-cust-email" style="font-size: 1.1rem; color: var(--text-dark);">-</strong>
+            </div>
+            <div>
+              <p style="margin: 4px 0; font-size: 0.9rem; color: var(--admin-text-muted);">Çatdırılma Ünvanı:</p>
+              <strong id="order-cust-address" style="font-size: 1.1rem; color: var(--text-dark);">-</strong>
+            </div>
+            <div>
+              <p style="margin: 4px 0; font-size: 0.9rem; color: var(--admin-text-muted);">Qeyd:</p>
+              <div id="order-cust-notes" style="font-size: 0.95rem; background: #f8fafc; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-style: italic; color: var(--text-dark);">-</div>
+            </div>
+          </div>
+
+          <!-- Order Status & Products Box -->
+          <div class="admin-card" style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+              <h3 style="margin:0; font-family: var(--font-display);">Sifarişin Məzmunu</h3>
+              <span id="order-status-badge" class="status-badge">-</span>
+            </div>
+
+             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem;">
+               <span>Sifariş Tarixi:</span>
+               <strong id="order-date-text">-</strong>
+             </div>
+ 
+             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; margin-top: 5px;">
+               <span>Sifarişin Statusu:</span>
+               <select id="order-details-status-select" class="admin-input" style="padding: 6px; font-size: 0.85rem; height: auto; width: 160px;"></select>
+             </div>
+
+            <!-- Table of products inside this order -->
+            <div class="admin-table-wrapper" style="margin-top: 10px;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Məhsul</th>
+                    <th>Seçimlər</th>
+                    <th>Qiymət</th>
+                    <th>Say</th>
+                    <th>Cəmi</th>
+                  </tr>
+                </thead>
+                <tbody id="order-details-items"></tbody>
+              </table>
+            </div>
+
+            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px; margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+              <div style="font-size:1.1rem;">Cəmi Məbləğ: <strong id="order-total-price" style="color:var(--color-primary); font-size:1.3rem;">0.00 AZN</strong></div>
+            </div>
+          </div>
+          
+        </div>
+      </section>
+
+      <!-- TAB: PRODUCTS LIST -->
+      <section id="tab-products" class="tab-content" style="display: none;">
+        <div class="action-row">
+          <div>İdarə edilən məhsullar</div>
+          <button class="btn btn--primary btn--sm" onclick="showProductFormView('add')">➕ Yeni Məhsul</button>
+        </div>
+        <div class="admin-card">
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Şəkil</th>
+                  <th>Adı</th>
+                  <th>Kateqoriya</th>
+                  <th>Qiymət</th>
+                  <th>İstehsalçı</th>
+                  <th>Stok</th>
+                  <th>Əməliyyat</th>
+                </tr>
+              </thead>
+              <tbody id="products-list"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: PRODUCTS FORM VIEW (FULL PAGE VIEW) -->
+      <section id="tab-product-form" class="tab-content" style="display: none;">
+        <div class="action-row">
+          <h2 id="product-form-title" style="margin: 0; font-family: var(--font-display);">Yeni Məhsul</h2>
+          <button class="btn btn--secondary btn--sm" onclick="switchTab('products')">⬅️ Siyahıya Qayıt</button>
+        </div>
+        <div class="admin-card">
+          <form id="product-edit-form">
+            <input type="hidden" id="prod-id">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--spacing-lg);">
+              <div class="admin-form-group">
+                <label class="admin-label" for="prod-title">Məhsul Adı</label>
+                <input type="text" id="prod-title" class="admin-input" required>
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label" for="prod-category">Kateqoriya</label>
+                <select id="prod-category" class="admin-input" style="height: 44px;" required></select>
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label" for="prod-subcategory">Subkateqoriya</label>
+                <select id="prod-subcategory" class="admin-input" style="height: 44px;">
+                  <option value="">Subkateqoriya Seçin</option>
+                </select>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--spacing-lg);">
+              <div class="admin-form-group">
+                <label class="admin-label" for="prod-price">Qiymət (AZN)</label>
+                <input type="number" id="prod-price" class="admin-input" step="0.01" required>
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label" for="prod-oldprice">Köhnə Qiymət (AZN, İsteğe bağlı)</label>
+                <input type="number" id="prod-oldprice" class="admin-input" step="0.01">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label" for="prod-sku">SKU Kodu</label>
+                <input type="text" id="prod-sku" class="admin-input">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg);">
+              <div class="admin-form-group">
+                <label class="admin-label" for="prod-image-file">Əsas Şəkil</label>
+                <input type="file" id="prod-image-file" class="admin-input" accept="image/*">
+                <input type="hidden" id="prod-image">
+                <div id="prod-image-preview" style="margin-top: 10px; display: none;">
+                  <img src="" alt="Ön Baxış" style="max-height: 100px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                </div>
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label" for="prod-images-file">Qalereya Şəkilləri</label>
+                <input type="file" id="prod-images-file" class="admin-input" accept="image/*" multiple>
+                <input type="hidden" id="prod-images">
+                <div id="prod-images-preview" style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;"></div>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--spacing-lg);">
+              <div class="admin-form-group">
+                <label class="admin-label" for="prod-producer">İstehsalçı</label>
+                <select id="prod-producer" class="admin-input" style="height: 44px;" required></select>
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label" for="prod-variant-name">Variant Seçim Növü (məs. Çəki, Həcm, Say)</label>
+                <input type="text" id="prod-variant-name" class="admin-input" placeholder="Çəki">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label" for="prod-variant-values">Variant Dəyərləri (Vergüllə ayrılmış)</label>
+                <input type="text" id="prod-variant-values" class="admin-input" placeholder="500 q, 1 kq">
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prod-features">Xüsusiyyətlər (Vergüllə ayrılmış, məs. 100% Təbii, Dağ Çiçəkləri)</label>
+              <input type="text" id="prod-features" class="admin-input" placeholder="100% Təbii, Dağ Çiçəkləri">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prod-desc">Məhsul Açıqlaması</label>
+              <textarea id="prod-desc" class="admin-input" rows="5" style="resize: none;"></textarea>
+            </div>
+            <div style="display: flex; gap: var(--spacing-xl); margin: var(--spacing-lg) 0;">
+              <label><input type="checkbox" id="prod-instock" checked> Stokda Var</label>
+              <label><input type="checkbox" id="prod-featured"> Öndə Çıxan (Featured)</label>
+            </div>
+            <button type="submit" class="btn btn--primary btn--full" style="height: 50px;">Yadda Saxla</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- TAB: CATEGORIES -->
+      <section id="tab-categories" class="tab-content" style="display: none;">
+        <div class="admin-card">
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>İkon</th>
+                  <th>Adı</th>
+                  <th>Üst Açıqlama (SEO Top)</th>
+                  <th>Alt Açıqlama (SEO Bottom)</th>
+                  <th>Əməliyyat</th>
+                </tr>
+              </thead>
+              <tbody id="categories-list"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: CATEGORY EDIT FORM VIEW -->
+      <section id="tab-category-form" class="tab-content" style="display: none;">
+        <div class="action-row">
+          <h2 style="margin: 0; font-family: var(--font-display);">Kateqoriyanı Redaktə Et</h2>
+          <button class="btn btn--secondary btn--sm" onclick="switchTab('categories')">⬅️ Geri</button>
+        </div>
+        <div class="admin-card">
+          <form id="category-edit-form">
+            <input type="hidden" id="cat-id">
+            <div style="display: grid; grid-template-columns: 1fr 3fr; gap: var(--spacing-md);" class="admin-form-group">
+              <div>
+                <label class="admin-label" for="cat-icon">İkon (Emoji)</label>
+                <input type="text" id="cat-icon" class="admin-input" required>
+              </div>
+              <div>
+                <label class="admin-label" for="cat-name">Kateqoriya Adı</label>
+                <input type="text" id="cat-name" class="admin-input" required>
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="cat-desc-top">Üst Mətn (SEO Top)</label>
+              <textarea id="cat-desc-top" class="admin-input" rows="4" style="resize: none;"></textarea>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="cat-desc-bottom">Alt Mətn (SEO Bottom)</label>
+              <textarea id="cat-desc-bottom" class="admin-input" rows="6" style="resize: none;"></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary btn--full" style="height: 50px;">Kateqoriyanı Yenilə</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- TAB: PRODUCERS -->
+      <section id="tab-producers" class="tab-content" style="display: none;">
+        <div class="action-row">
+          <div>İstehsalçılar siyahısı</div>
+          <button class="btn btn--primary btn--sm" onclick="showProducerFormView('add')">➕ Yeni İstehsalçı</button>
+        </div>
+        <div class="admin-card">
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Şəkil</th>
+                  <th>Adı</th>
+                  <th>Fəaliyyət Yeri</th>
+                  <th>İxtisaslaşma</th>
+                  <th>Başlama İli</th>
+                  <th>Əməliyyat</th>
+                </tr>
+              </thead>
+              <tbody id="producers-list"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: PRODUCER FORM VIEW -->
+      <section id="tab-producer-form" class="tab-content" style="display: none;">
+        <div class="action-row">
+          <h2 id="producer-form-title" style="margin: 0; font-family: var(--font-display);">Yeni İstehsalçı</h2>
+          <button class="btn btn--secondary btn--sm" onclick="switchTab('producers')">⬅️ Siyahıya Qayıt</button>
+        </div>
+        <div class="admin-card">
+          <form id="producer-edit-form">
+            <input type="hidden" id="pr-id">
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--spacing-lg);" class="admin-form-group">
+              <div>
+                <label class="admin-label" for="pr-name">İstehsalçının Adı</label>
+                <input type="text" id="pr-name" class="admin-input" required>
+              </div>
+              <div>
+                <label class="admin-label" for="pr-since">Fəaliyyət İli (məs. 1993)</label>
+                <input type="number" id="pr-since" class="admin-input" required>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg);" class="admin-form-group">
+              <div>
+                <label class="admin-label" for="pr-location">Fəaliyyət Yeri (Rayon, Kənd)</label>
+                <input type="text" id="pr-location" class="admin-input" placeholder="Gədəbəy, Azərbaycan" required>
+              </div>
+              <div>
+                <label class="admin-label" for="pr-specialty">İxtisaslaşma sahəsi</label>
+                <input type="text" id="pr-specialty" class="admin-input" placeholder="Dağ Balı və Arıçılıq" required>
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="pr-image-file">Profil Şəkli</label>
+              <input type="file" id="pr-image-file" class="admin-input" accept="image/*">
+              <input type="hidden" id="pr-image">
+              <div id="pr-image-preview" style="margin-top: 10px; display: none;">
+                <img src="" alt="Ön Baxış" style="max-height: 100px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="pr-bio">İstehsalçı Bioqrafiyası</label>
+              <textarea id="pr-bio" class="admin-input" rows="4" style="resize: none;"></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary btn--full" style="height: 50px;">İstehsalçını Yadda Saxla</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- TAB: BLOGS -->
+      <section id="tab-blogs" class="tab-content" style="display: none;">
+        <div class="action-row">
+          <div>Blog yazıları</div>
+          <button class="btn btn--primary btn--sm" onclick="showBlogFormView('add')">➕ Yeni Yazı</button>
+        </div>
+        <div class="admin-card">
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Şəkil</th>
+                  <th>Başlıq</th>
+                  <th>Tarix</th>
+                  <th>Əməliyyat</th>
+                </tr>
+              </thead>
+              <tbody id="blogs-list"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: BLOG FORM VIEW -->
+      <section id="tab-blog-form" class="tab-content" style="display: none;">
+        <div class="action-row">
+          <h2 id="blog-form-title" style="margin: 0; font-family: var(--font-display);">Yeni Blog Yazısı</h2>
+          <button class="btn btn--secondary btn--sm" onclick="switchTab('blogs')">⬅️ Siyahıya Qayıt</button>
+        </div>
+        <div class="admin-card">
+          <form id="blog-edit-form">
+            <input type="hidden" id="blog-id">
+            <div class="admin-form-group">
+              <label class="admin-label" for="blog-title">Məqalə Başlığı</label>
+              <input type="text" id="blog-title" class="admin-input" required>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="blog-image-file">Məqalə Şəkli</label>
+              <input type="file" id="blog-image-file" class="admin-input" accept="image/*">
+              <input type="hidden" id="blog-image">
+              <div id="blog-image-preview" style="margin-top: 10px; display: none;">
+                <img src="" alt="Ön Baxış" style="max-height: 100px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="blog-content">Məqalə Məzmunu</label>
+              <textarea id="blog-content" class="admin-input" rows="8" style="resize: none;" required></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary btn--full" style="height: 50px;">Məqaləni Yadda Saxla</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- TAB: REVIEWS -->
+      <section id="tab-reviews" class="tab-content" style="display: none;">
+        <div class="admin-card">
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Məhsul ID</th>
+                  <th>Yazan</th>
+                  <th>Reytinq</th>
+                  <th>Rəy Mətni</th>
+                  <th>Tarix</th>
+                  <th>Əməliyyat</th>
+                </tr>
+              </thead>
+              <tbody id="reviews-list"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: SETTINGS -->
+      <section id="tab-settings" class="tab-content" style="display: none;">
+        <div class="admin-card">
+          <h2 style="font-family: var(--font-display); margin-bottom: var(--spacing-md);">Ümumi Dükan Tənzimləmələri</h2>
+          <form id="settings-form">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg);" class="admin-form-group">
+              <div>
+                <label class="admin-label" for="set-name">Dükanın Adı</label>
+                <input type="text" id="set-name" class="admin-input" required>
+              </div>
+              <div>
+                <label class="admin-label" for="set-phone">Əlaqə Telefonu</label>
+                <input type="text" id="set-phone" class="admin-input" required>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg);" class="admin-form-group">
+              <div>
+                <label class="admin-label" for="set-email">Əlaqə E-maili</label>
+                <input type="email" id="set-email" class="admin-input" required>
+              </div>
+              <div>
+                <label class="admin-label" for="set-address">Ünvan</label>
+                <input type="text" id="set-address" class="admin-input" required>
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Aktiv Promokodlar (Yalnız göstərmək üçün)</label>
+              <div id="promocodes-container" style="display: flex; gap: var(--spacing-sm); flex-wrap: wrap;"></div>
+            </div>
+            <button type="submit" class="btn btn--primary btn--full" style="height: 50px; margin-top: var(--spacing-lg);">Tənzimləmələri Yenilə</button>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // Intercept all API calls in production to route to Render backend
+    (function() {
+      const originalFetch = window.fetch;
+      window.fetch = function(input, init) {
+        if (typeof input === 'string' && input.startsWith('/api/')) {
+          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+          const baseUrl = isLocal ? '' : 'https://kendbazari-backend.onrender.com';
+          input = baseUrl + input;
+        }
+        return originalFetch(input, init);
+      };
+    })();
+
+    let products = [];
+    let orders = [];
+    let categories = [];
+    let producers = [];
+    let blogs = [];
+    let reviews = [];
+    let settings = {};
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('adminToken');
+      if (token) {
+        showAdminSystem();
+      }
+
+      document.getElementById('login-form').addEventListener('submit', handleLogin);
+      document.getElementById('product-edit-form').addEventListener('submit', handleSaveProduct);
+      document.getElementById('category-edit-form').addEventListener('submit', handleSaveCategory);
+      document.getElementById('producer-edit-form').addEventListener('submit', handleSaveProducer);
+      document.getElementById('blog-edit-form').addEventListener('submit', handleSaveBlog);
+      document.getElementById('settings-form').addEventListener('submit', handleSaveSettings);
+
+      // Initialize file uploads
+      initFileUpload('prod-image-file', 'prod-image', 'prod-image-preview');
+      initGalleryUpload('prod-images-file', 'prod-images', 'prod-images-preview');
+      initFileUpload('pr-image-file', 'pr-image', 'pr-image-preview');
+      initFileUpload('blog-image-file', 'blog-image', 'blog-image-preview');
+
+      // Category -> Subcategory dynamic selector
+      document.getElementById('prod-category').addEventListener('change', () => {
+        updateSubcategoryDropdown();
+      });
+    });
+
+    function updateSubcategoryDropdown(selectedSubcategory = '') {
+      const categoryId = document.getElementById('prod-category').value;
+      const category = categories.find(c => c.id === categoryId);
+      const subcatSelect = document.getElementById('prod-subcategory');
+      if (category && category.subcategories && category.subcategories.length > 0) {
+        subcatSelect.innerHTML = '<option value="">Subkateqoriya Seçin</option>' + 
+          category.subcategories.map(s => `<option value="${s}">${s}</option>`).join('');
+        subcatSelect.value = selectedSubcategory;
+      } else {
+        subcatSelect.innerHTML = '<option value="">Subkateqoriya Yoxdur</option>';
+      }
+    }
+
+    function getAuthHeaders() {
+      return {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('adminToken')
+      };
+    }
+
+    // Image Upload Helper (converts file to base64 and uploads to backend)
+    async function uploadImageFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async () => {
+          try {
+            const res = await fetch('/api/upload', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ base64Data: reader.result })
+            });
+            if (res.ok) {
+              const data = await res.json();
+              resolve(data.url);
+            } else {
+              const err = await res.json();
+              reject(err.error || 'Şəkil yüklənə bilmədi');
+            }
+          } catch (e) {
+            reject(e);
+          }
+        };
+        reader.onerror = () => reject('Fayl oxunarkən xəta baş verdi');
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Set up listeners for file inputs to automatically upload and update preview & hidden input
+    function initFileUpload(inputId, hiddenInputId, previewContainerId) {
+      const fileInput = document.getElementById(inputId);
+      const hiddenInput = document.getElementById(hiddenInputId);
+      const previewContainer = document.getElementById(previewContainerId);
+
+      fileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+          const label = fileInput.previousElementSibling;
+          const originalText = label.textContent;
+          label.textContent = 'Yüklənir...';
+          
+          const imageUrl = await uploadImageFile(file);
+          hiddenInput.value = imageUrl;
+          
+          // Show preview
+          const img = previewContainer.querySelector('img');
+          img.src = imageUrl;
+          previewContainer.style.display = 'block';
+          
+          label.textContent = originalText;
+        } catch (err) {
+          alert('Şəkil yüklənərkən xəta: ' + err);
+          fileInput.value = '';
+        }
+      });
+    }
+
+    // Set up gallery multiple image uploader
+    function initGalleryUpload(inputId, hiddenInputId, previewContainerId) {
+      const fileInput = document.getElementById(inputId);
+      const hiddenInput = document.getElementById(hiddenInputId);
+      const previewContainer = document.getElementById(previewContainerId);
+
+      fileInput.addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+
+        try {
+          const label = fileInput.previousElementSibling;
+          const originalText = label.textContent;
+          label.textContent = 'Şəkillər yüklənir...';
+          
+          let currentUrls = hiddenInput.value ? hiddenInput.value.split(',').filter(Boolean) : [];
+          
+          for (const file of files) {
+            const url = await uploadImageFile(file);
+            currentUrls.push(url);
+          }
+          
+          hiddenInput.value = currentUrls.join(',');
+          renderGalleryPreviews(currentUrls, hiddenInputId, previewContainerId);
+          
+          label.textContent = originalText;
+          fileInput.value = ''; // Reset file input
+        } catch (err) {
+          alert('Qalereya şəkilləri yüklənərkən xəta: ' + err);
+          fileInput.value = '';
+        }
+      });
+    }
+
+    function renderGalleryPreviews(urls, hiddenInputId, previewContainerId) {
+      const previewContainer = document.getElementById(previewContainerId);
+      previewContainer.innerHTML = urls.map((url, index) => `
+        <div style="position: relative; width: 80px; height: 80px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden;">
+          <img src="${url}" style="width: 100%; height: 100%; object-fit: cover;">
+          <button type="button" onclick="removeGalleryImage(${index}, '${hiddenInputId}', '${previewContainerId}')" style="position: absolute; top: 2px; right: 2px; background: rgba(220, 38, 38, 0.8); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function removeGalleryImage(index, hiddenInputId, previewContainerId) {
+      const hiddenInput = document.getElementById(hiddenInputId);
+      let urls = hiddenInput.value ? hiddenInput.value.split(',').filter(Boolean) : [];
+      urls.splice(index, 1);
+      hiddenInput.value = urls.join(',');
+      renderGalleryPreviews(urls, hiddenInputId, previewContainerId);
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem('adminToken', data.token);
+          showAdminSystem();
+        } else {
+          const errData = await response.json();
+          alert(errData.error || 'Giriş uğursuzdur!');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Giriş cəhdi zamanı şəbəkə xətası!');
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('adminToken');
+      document.getElementById('admin-main-section').style.display = 'none';
+      document.getElementById('login-section').style.display = 'flex';
+    }
+
+    function showAdminSystem() {
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('admin-main-section').style.display = 'flex';
+      
+      fetchData();
+    }
+
+    async function fetchData() {
+      try {
+        const [prodRes, catRes, prodcRes, blogRes, orderRes, revRes, setRes] = await Promise.all([
+          fetch('/api/products'),
+          fetch('/api/categories'),
+          fetch('/api/producers'),
+          fetch('/api/blogs'),
+          fetch('/api/admin/orders', { headers: getAuthHeaders() }),
+          fetch('/api/admin/reviews', { headers: getAuthHeaders() }),
+          fetch('/api/settings')
+        ]);
+
+        if (orderRes.status === 401) {
+          handleLogout();
+          return;
+        }
+
+        products = await prodRes.json();
+        categories = await catRes.json();
+        producers = await prodcRes.json();
+        blogs = await blogRes.json();
+        orders = await orderRes.json();
+        reviews = await revRes.json();
+        settings = await setRes.json();
+
+        // Populate selects
+        populateDropdowns();
+
+        renderDashboard();
+        renderOrders();
+        renderProductsList();
+        renderCategoriesList();
+        renderProducersList();
+        renderBlogsList();
+        renderReviewsList();
+        populateSettingsForm();
+      } catch (err) {
+        console.error('Error fetching admin data:', err);
+      }
+    }
+
+    function populateDropdowns() {
+      const prodCategorySelect = document.getElementById('prod-category');
+      prodCategorySelect.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+
+      const prodProducerSelect = document.getElementById('prod-producer');
+      prodProducerSelect.innerHTML = producers.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+
+      updateSubcategoryDropdown();
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.admin-nav-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-tab-${tabName}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const titles = {
+        'dashboard': 'Dashboard',
+        'orders': 'Sifarişlərin İdarə Olunması',
+        'products': 'Məhsulların İdarə Olunması',
+        'product-form': 'Məhsul Redaktə Forması',
+        'categories': 'Kateqoriyaların İdarə Olunması',
+        'category-form': 'Kateqoriya Forması',
+        'producers': 'İstehsalçıların İdarə Olunması',
+        'producer-form': 'İstehsalçı Forması',
+        'blogs': 'Blog Yazılarının İdarə Olunması',
+        'blog-form': 'Blog Forması',
+        'reviews': 'Müştəri Rəyləri',
+        'settings': 'Ümumi Dükan Tənzimləmələri'
+      };
+      
+      document.getElementById('page-tab-title').textContent = titles[tabName] || 'Admin Panel';
+
+      document.querySelectorAll('.tab-content').forEach(section => section.style.display = 'none');
+      document.getElementById(`tab-${tabName}`).style.display = 'block';
+
+      if (['dashboard', 'orders', 'products', 'categories', 'producers', 'blogs', 'reviews'].includes(tabName)) {
+        fetchData();
+      }
+    }
+
+    // DASHBOARD RENDERING
+    function renderDashboard() {
+      document.getElementById('stat-total-orders').textContent = orders.length;
+      const totalRev = orders.reduce((sum, o) => o.status !== 'Ləğv edildi' ? sum + o.total : sum, 0);
+      document.getElementById('stat-total-revenue').textContent = `${totalRev.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN`;
+      document.getElementById('stat-total-products').textContent = products.length;
+
+      const recent = orders.slice(0, 5);
+      const container = document.getElementById('dashboard-recent-orders');
+      if (recent.length === 0) {
+        container.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--admin-text-muted);">Sifariş yoxdur.</td></tr>';
+        return;
+      }
+      container.innerHTML = recent.map(o => `
+        <tr>
+          <td style="font-weight:700; color:var(--primary-light); cursor:pointer;" onclick="showOrderDetails('${o.id}')" title="Detallara baxmaq üçün klikləyin">${o.id}</td>
+          <td>${o.customer.firstname} ${o.customer.lastname}</td>
+          <td style="font-weight:700;">${o.total.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN</td>
+          <td>${new Date(o.createdAt).toLocaleDateString('az-AZ')}</td>
+          <td><span class="status-badge ${getStatusClass(o.status)}">${o.status}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    // ORDERS RENDERING
+    function renderOrders() {
+      const container = document.getElementById('orders-list');
+      if (orders.length === 0) {
+        container.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--admin-text-muted);">Sifariş tapılmadı.</td></tr>';
+        return;
+      }
+      container.innerHTML = orders.map(o => {
+        const itemsStr = o.items.map(item => `${item.title} (${item.quantity} ədəd)`).join(', ');
+        return `
+          <tr>
+            <td style="font-weight:700; color:var(--primary-light);">${o.id}</td>
+            <td>
+              <div><strong>${o.customer.firstname} ${o.customer.lastname}</strong></div>
+              <div style="font-size:0.8rem; color:var(--admin-text-muted);">${o.customer.phone}</div>
+              <div style="font-size:0.8rem; color:var(--admin-text-muted);">${o.customer.city}, ${o.customer.address}</div>
+            </td>
+            <td style="max-width:200px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;" title="${itemsStr}">${itemsStr}</td>
+            <td style="font-weight:700;">${o.total.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN</td>
+            <td>${new Date(o.createdAt).toLocaleString('az-AZ')}</td>
+            <td><span class="status-badge ${getStatusClass(o.status)}">${o.status}</span></td>
+            <td>
+              <button class="btn btn--secondary btn--sm" style="padding: 6px 12px; font-size: 0.8rem;" onclick="showOrderDetails('${o.id}')">👁️ Detal</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function showOrderDetails(orderId) {
+      const o = orders.find(ord => ord.id === orderId);
+      if (!o) return;
+
+      document.getElementById('order-details-title').textContent = `Sifariş Detalı: ${o.id}`;
+      document.getElementById('order-cust-name').textContent = `${o.customer.firstname} ${o.customer.lastname}`;
+      document.getElementById('order-cust-phone').textContent = o.customer.phone;
+      document.getElementById('order-cust-email').textContent = o.customer.email || 'Daxil edilməyib';
+      document.getElementById('order-cust-address').textContent = `${o.customer.city}, ${o.customer.address}`;
+      document.getElementById('order-cust-notes').textContent = o.customer.notes || 'Qeyd yoxdur';
+      
+      const badge = document.getElementById('order-status-badge');
+      badge.textContent = o.status;
+      badge.className = `status-badge ${getStatusClass(o.status)}`;
+      
+      document.getElementById('order-date-text').textContent = new Date(o.createdAt).toLocaleString('az-AZ');
+      
+      // Status update select
+      const statusSelect = document.getElementById('order-details-status-select');
+      statusSelect.innerHTML = `
+        <option value="Gözləmədə" ${o.status === 'Gözləmədə' ? 'selected' : ''}>Gözləmədə</option>
+        <option value="Hazırlanır" ${o.status === 'Hazırlanır' ? 'selected' : ''}>Hazırlanır</option>
+        <option value="Yoldadır" ${o.status === 'Yoldadır' ? 'selected' : ''}>Yoldadır</option>
+        <option value="Çatdırıldı" ${o.status === 'Çatdırıldı' ? 'selected' : ''}>Çatdırıldı</option>
+        <option value="Ləğv edildi" ${o.status === 'Ləğv edildi' ? 'selected' : ''}>Ləğv edildi</option>
+      `;
+       statusSelect.onchange = async (e) => {
+        const newStatus = e.target.value;
+        if (!confirm(`Sifarişin statusunu "${newStatus}" olaraq dəyişdirməyə əminsiniz?`)) {
+          statusSelect.value = o.status;
+          return;
+        }
+        await updateOrderStatus(o.id, newStatus);
+        o.status = newStatus;
+        badge.textContent = newStatus;
+        badge.className = `status-badge ${getStatusClass(newStatus)}`;
+      };
+      
+      const itemsContainer = document.getElementById('order-details-items');
+      itemsContainer.innerHTML = o.items.map(item => {
+        let optionsStr = '';
+        if (item.options) {
+          optionsStr = Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(', ');
+        }
+        
+        // Find product to display producer name
+        const dbProduct = products.find(p => p.id === item.productId || p.id === item.id || p.title === item.title);
+        const producerName = dbProduct ? dbProduct.producer : (item.producer || 'Bilinmir');
+        
+        return `
+          <tr>
+            <td>
+              <div><strong>${item.title}</strong></div>
+              <div style="font-size: 0.75rem; color: var(--admin-text-muted); margin-top: 2px;">İstehsalçı: ${producerName}</div>
+            </td>
+            <td style="font-style: italic; font-size: 0.85rem; color: var(--admin-text-muted);">${optionsStr || '-'}</td>
+            <td>${item.price.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN</td>
+            <td>${item.quantity}</td>
+            <td style="font-weight:700;">${(item.price * item.quantity).toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('order-total-price').textContent = `${o.total.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN`;
+
+      switchTab('order-details');
+    }
+
+    async function updateOrderStatus(id, newStatus) {
+      try {
+        const response = await fetch(`/api/admin/orders/${id}/status`, {
+          method: 'PUT',
+          headers: getAuthHeaders(),
+          body: JSON.stringify({ status: newStatus })
+        });
+        if (response.ok) fetchData();
+      } catch (err) { console.error(err); }
+    }
+
+    // PRODUCTS RENDERING & FORM
+    function renderProductsList() {
+      const container = document.getElementById('products-list');
+      container.innerHTML = products.map(p => `
+        <tr>
+          <td><img src="${p.image}" alt="${p.title}" style="width: 40px; height: 40px; object-fit: cover; border-radius: var(--radius-sm);"></td>
+          <td><strong>${p.title}</strong></td>
+          <td style="text-transform: capitalize;">${p.category.replace('-', ' ')}</td>
+          <td style="font-weight:700;">${p.price.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN</td>
+          <td>${p.producer}</td>
+          <td><span class="status-badge ${p.inStock ? 'status-delivered' : 'status-cancelled'}">${p.inStock ? 'Var' : 'Bitib'}</span></td>
+          <td>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn--secondary btn--sm" style="padding: 4px 10px; font-size:0.8rem; height:auto;" onclick="showProductFormView('edit', '${p.id}')">Redaktə</button>
+              <button class="btn btn-danger btn--sm" style="padding: 4px 10px; font-size:0.8rem; height:auto;" onclick="deleteProduct('${p.id}')">Sil</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function showProductFormView(mode, id = null) {
+      const form = document.getElementById('product-edit-form');
+      form.reset();
+
+      // Reset image preview state
+      document.getElementById('prod-image').value = '';
+      document.getElementById('prod-image-preview').style.display = 'none';
+      document.getElementById('prod-image-preview').querySelector('img').src = '';
+      document.getElementById('prod-images').value = '';
+      document.getElementById('prod-images-preview').innerHTML = '';
+      document.getElementById('prod-image-file').value = '';
+      document.getElementById('prod-images-file').value = '';
+      
+      // Reset variants
+      document.getElementById('prod-variant-name').value = '';
+      document.getElementById('prod-variant-values').value = '';
+
+      if (mode === 'add') {
+        document.getElementById('product-form-title').textContent = '➕ Yeni Məhsul Əlavə Et';
+        document.getElementById('prod-id').value = '';
+        updateSubcategoryDropdown();
+      } else {
+        document.getElementById('product-form-title').textContent = '📝 Məhsulu Redaktə Et';
+        const p = products.find(prod => prod.id === id);
+        if (p) {
+          document.getElementById('prod-id').value = p.id;
+          document.getElementById('prod-title').value = p.title;
+          document.getElementById('prod-category').value = p.category;
+          document.getElementById('prod-price').value = p.price;
+          document.getElementById('prod-oldprice').value = p.oldPrice || '';
+          document.getElementById('prod-sku').value = p.sku || '';
+          
+          document.getElementById('prod-image').value = p.image || '';
+          if (p.image) {
+            const preview = document.getElementById('prod-image-preview');
+            preview.querySelector('img').src = p.image;
+            preview.style.display = 'block';
+          }
+          
+          document.getElementById('prod-images').value = (p.images || []).join(',');
+          if (p.images && p.images.length > 0) {
+            renderGalleryPreviews(p.images, 'prod-images', 'prod-images-preview');
+          }
+
+          document.getElementById('prod-producer').value = p.producerId;
+          updateSubcategoryDropdown(p.subcategory || '');
+          
+          // Populate variant choice
+          document.getElementById('prod-variant-name').value = p.variantName || (p.sizes && p.sizes.length > 0 ? 'Seçim' : '');
+          document.getElementById('prod-variant-values').value = (p.variantValues && p.variantValues.length > 0 ? p.variantValues : (p.sizes || [])).join(', ');
+
+          document.getElementById('prod-features').value = (p.features || []).join(', ');
+          document.getElementById('prod-desc').value = p.description || '';
+          document.getElementById('prod-instock').checked = p.inStock;
+          document.getElementById('prod-featured').checked = p.featured;
+        }
+      }
+
+      switchTab('product-form');
+    }
+
+    async function handleSaveProduct(e) {
+      e.preventDefault();
+      const id = document.getElementById('prod-id').value;
+      
+      const variantName = document.getElementById('prod-variant-name').value.trim();
+      const variantValuesInput = document.getElementById('prod-variant-values').value.trim();
+      const variantValues = variantValuesInput ? variantValuesInput.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+      const productData = {
+        title: document.getElementById('prod-title').value.trim(),
+        category: document.getElementById('prod-category').value,
+        subcategory: document.getElementById('prod-subcategory').value,
+        price: parseFloat(document.getElementById('prod-price').value),
+        oldPrice: document.getElementById('prod-oldprice').value ? parseFloat(document.getElementById('prod-oldprice').value) : null,
+        sku: document.getElementById('prod-sku').value.trim(),
+        image: document.getElementById('prod-image').value.trim(),
+        images: document.getElementById('prod-images').value.trim().split(',').map(s => s.trim()).filter(Boolean),
+        producerId: document.getElementById('prod-producer').value,
+        variantName: variantName,
+        variantValues: variantValues,
+        features: document.getElementById('prod-features').value.trim().split(',').map(s => s.trim()).filter(Boolean),
+        description: document.getElementById('prod-desc').value.trim(),
+        inStock: document.getElementById('prod-instock').checked,
+        featured: document.getElementById('prod-featured').checked
+      };
+
+      const url = id ? `/api/admin/products/${id}` : '/api/admin/products';
+      const method = id ? 'PUT' : 'POST';
+
+      try {
+        const response = await fetch(url, {
+          method: method,
+          headers: getAuthHeaders(),
+          body: JSON.stringify(productData)
+        });
+
+        if (response.ok) {
+          switchTab('products');
+        } else {
+          const err = await response.json();
+          alert(err.error || 'Əməliyyat uğursuz oldu.');
+        }
+      } catch (err) { console.error(err); }
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm('Bu məhsulu silmək istədiyinizdən əminsiniz?')) return;
+      try {
+        const response = await fetch(`/api/admin/products/${id}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders()
+        });
+        if (response.ok) fetchData();
+      } catch (err) { console.error(err); }
+    }
+
+    // CATEGORIES RENDERING & EDIT
+    function renderCategoriesList() {
+      const container = document.getElementById('categories-list');
+      container.innerHTML = categories.map(c => `
+        <tr>
+          <td style="font-size: 1.5rem;">${c.icon}</td>
+          <td><strong>${c.name}</strong></td>
+          <td style="max-width:250px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${c.descriptionTop || ''}</td>
+          <td style="max-width:250px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${c.descriptionBottom || ''}</td>
+          <td>
+            <button class="btn btn--secondary btn--sm" style="padding: 4px 10px; font-size:0.8rem; height:auto;" onclick="showCategoryEditForm('${c.id}')">Redaktə</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function showCategoryEditForm(id) {
+      const cat = categories.find(c => c.id === id);
+      if (cat) {
+        document.getElementById('cat-id').value = cat.id;
+        document.getElementById('cat-icon').value = cat.icon;
+        document.getElementById('cat-name').value = cat.name;
+        document.getElementById('cat-desc-top').value = cat.descriptionTop || '';
+        document.getElementById('cat-desc-bottom').value = cat.descriptionBottom || '';
+        switchTab('category-form');
+      }
+    }
+
+    async function handleSaveCategory(e) {
+      e.preventDefault();
+      const id = document.getElementById('cat-id').value;
+      const catData = {
+        icon: document.getElementById('cat-icon').value.trim(),
+        name: document.getElementById('cat-name').value.trim(),
+        descriptionTop: document.getElementById('cat-desc-top').value.trim(),
+        descriptionBottom: document.getElementById('cat-desc-bottom').value.trim()
+      };
+
+      try {
+        const response = await fetch(`/api/admin/categories/${id}`, {
+          method: 'PUT',
+          headers: getAuthHeaders(),
+          body: JSON.stringify(catData)
+        });
+        if (response.ok) {
+          switchTab('categories');
+        } else {
+          alert('Kateqoriya yenilənmədi!');
+        }
+      } catch (err) { console.error(err); }
+    }
+
+    // PRODUCERS RENDERING & FORM
+    function renderProducersList() {
+      const container = document.getElementById('producers-list');
+      container.innerHTML = producers.map(p => `
+        <tr>
+          <td><img src="${p.image}" alt="${p.name}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;"></td>
+          <td><strong>${p.name}</strong></td>
+          <td>${p.location}</td>
+          <td>${p.specialty}</td>
+          <td>${p.since}</td>
+          <td>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn--secondary btn--sm" style="padding: 4px 10px; font-size:0.8rem; height:auto;" onclick="showProducerFormView('edit', '${p.id}')">Redaktə</button>
+              <button class="btn btn-danger btn--sm" style="padding: 4px 10px; font-size:0.8rem; height:auto;" onclick="deleteProducer('${p.id}')">Sil</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function showProducerFormView(mode, id = null) {
+      const form = document.getElementById('producer-edit-form');
+      form.reset();
+
+      // Reset image preview state
+      document.getElementById('pr-image').value = '';
+      document.getElementById('pr-image-preview').style.display = 'none';
+      document.getElementById('pr-image-preview').querySelector('img').src = '';
+      document.getElementById('pr-image-file').value = '';
+
+      if (mode === 'add') {
+        document.getElementById('producer-form-title').textContent = '➕ Yeni İstehsalçı';
+        document.getElementById('pr-id').value = '';
+      } else {
+        document.getElementById('producer-form-title').textContent = '📝 İstehsalçını Redaktə Et';
+        const p = producers.find(pr => pr.id === id);
+        if (p) {
+          document.getElementById('pr-id').value = p.id;
+          document.getElementById('pr-name').value = p.name;
+          document.getElementById('pr-since').value = p.since;
+          document.getElementById('pr-location').value = p.location;
+          document.getElementById('pr-specialty').value = p.specialty;
+          
+          document.getElementById('pr-image').value = p.image || '';
+          if (p.image) {
+            const preview = document.getElementById('pr-image-preview');
+            preview.querySelector('img').src = p.image;
+            preview.style.display = 'block';
+          }
+          
+          document.getElementById('pr-bio').value = p.bio || '';
+        }
+      }
+      switchTab('producer-form');
+    }
+
+    async function handleSaveProducer(e) {
+      e.preventDefault();
+      const id = document.getElementById('pr-id').value;
+      const prData = {
+        name: document.getElementById('pr-name').value.trim(),
+        since: document.getElementById('pr-since').value,
+        location: document.getElementById('pr-location').value.trim(),
+        specialty: document.getElementById('pr-specialty').value.trim(),
+        image: document.getElementById('pr-image').value.trim(),
+        bio: document.getElementById('pr-bio').value.trim()
+      };
+
+      const url = id ? `/api/admin/producers/${id}` : '/api/admin/producers';
+      const method = id ? 'PUT' : 'POST';
+
+      try {
+        const response = await fetch(url, {
+          method: method,
+          headers: getAuthHeaders(),
+          body: JSON.stringify(prData)
+        });
+        if (response.ok) {
+          switchTab('producers');
+        } else {
+          alert('Xəta baş verdi!');
+        }
+      } catch (err) { console.error(err); }
+    }
+
+    async function deleteProducer(id) {
+      if (!confirm('İstehsalçını silməyə əminsiniz?')) return;
+      try {
+        const response = await fetch(`/api/admin/producers/${id}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders()
+        });
+        if (response.ok) fetchData();
+      } catch (err) { console.error(err); }
+    }
+
+    // BLOGS RENDERING & FORM
+    function renderBlogsList() {
+      const container = document.getElementById('blogs-list');
+      container.innerHTML = blogs.map(b => `
+        <tr>
+          <td><img src="${b.image}" alt="${b.title}" style="width: 60px; height: 40px; object-fit: cover; border-radius: var(--radius-sm);"></td>
+          <td><strong>${b.title}</strong></td>
+          <td>${b.date}</td>
+          <td>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn--secondary btn--sm" style="padding: 4px 10px; font-size:0.8rem; height:auto;" onclick="showBlogFormView('edit', '${b.id}')">Redaktə</button>
+              <button class="btn btn-danger btn--sm" style="padding: 4px 10px; font-size:0.8rem; height:auto;" onclick="deleteBlog('${b.id}')">Sil</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function showBlogFormView(mode, id = null) {
+      const form = document.getElementById('blog-edit-form');
+      form.reset();
+
+      // Reset image preview state
+      document.getElementById('blog-image').value = '';
+      document.getElementById('blog-image-preview').style.display = 'none';
+      document.getElementById('blog-image-preview').querySelector('img').src = '';
+      document.getElementById('blog-image-file').value = '';
+
+      if (mode === 'add') {
+        document.getElementById('blog-form-title').textContent = '➕ Yeni Blog Yazısı';
+        document.getElementById('blog-id').value = '';
+      } else {
+        document.getElementById('blog-form-title').textContent = '📝 Blog Yazısını Redaktə Et';
+        const b = blogs.find(bg => bg.id === id);
+        if (b) {
+          document.getElementById('blog-id').value = b.id;
+          document.getElementById('blog-title').value = b.title;
+          
+          document.getElementById('blog-image').value = b.image || '';
+          if (b.image) {
+            const preview = document.getElementById('blog-image-preview');
+            preview.querySelector('img').src = b.image;
+            preview.style.display = 'block';
+          }
+          
+          document.getElementById('blog-content').value = b.content || '';
+        }
+      }
+      switchTab('blog-form');
+    }
+
+    async function handleSaveBlog(e) {
+      e.preventDefault();
+      const id = document.getElementById('blog-id').value;
+      const blogData = {
+        title: document.getElementById('blog-title').value.trim(),
+        image: document.getElementById('blog-image').value.trim(),
+        content: document.getElementById('blog-content').value.trim()
+      };
+
+      const url = id ? `/api/admin/blogs/${id}` : '/api/admin/blogs';
+      const method = id ? 'PUT' : 'POST';
+
+      try {
+        const response = await fetch(url, {
+          method: method,
+          headers: getAuthHeaders(),
+          body: JSON.stringify(blogData)
+        });
+        if (response.ok) {
+          switchTab('blogs');
+        } else {
+          alert('Xəta baş verdi!');
+        }
+      } catch (err) { console.error(err); }
+    }
+
+    async function deleteBlog(id) {
+      if (!confirm('Blog yazısını silməyə əminsiniz?')) return;
+      try {
+        const response = await fetch(`/api/admin/blogs/${id}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders()
+        });
+        if (response.ok) fetchData();
+      } catch (err) { console.error(err); }
+    }
+
+    // REVIEWS RENDERING
+    function renderReviewsList() {
+      const container = document.getElementById('reviews-list');
+      if (reviews.length === 0) {
+        container.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--admin-text-muted);">Rəy yoxdur.</td></tr>';
+        return;
+      }
+      container.innerHTML = reviews.map(r => `
+        <tr>
+          <td><strong>${r.productId}</strong></td>
+          <td>${r.name}</td>
+          <td>⭐ ${r.rating} / 5</td>
+          <td style="max-width:300px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;" title="${r.text}">${r.text}</td>
+          <td>${r.date}</td>
+          <td>
+            <button class="btn btn-danger btn--sm" style="padding: 4px 10px; font-size:0.8rem; height:auto;" onclick="deleteReview('${r.id}')">Sil</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function deleteReview(id) {
+      if (!confirm('Rəyi silməyə əminsiniz?')) return;
+      try {
+        const response = await fetch(`/api/admin/reviews/${id}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders()
+        });
+        if (response.ok) fetchData();
+      } catch (err) { console.error(err); }
+    }
+
+    // SETTINGS RENDERING
+    function populateSettingsForm() {
+      document.getElementById('set-name').value = settings.storeName || '';
+      document.getElementById('set-phone').value = settings.phone || '';
+      document.getElementById('set-email').value = settings.email || '';
+      document.getElementById('set-address').value = settings.address || '';
+
+      const container = document.getElementById('promocodes-container');
+      const codes = settings.promocodes || [];
+      if (codes.length === 0) {
+        container.innerHTML = '<span style="color:var(--admin-text-muted);">Aktiv promokod yoxdur.</span>';
+      } else {
+        container.innerHTML = codes.map(c => `
+          <span class="status-badge status-delivered" style="font-family: monospace; font-size:0.9rem;">
+            ${c.code} (-${c.discount}${c.type === 'percent' ? '%' : ' AZN'})
+          </span>
+        `).join('');
+      }
+    }
+
+    async function handleSaveSettings(e) {
+      e.preventDefault();
+      const setData = {
+        storeName: document.getElementById('set-name').value.trim(),
+        phone: document.getElementById('set-phone').value.trim(),
+        email: document.getElementById('set-email').value.trim(),
+        address: document.getElementById('set-address').value.trim()
+      };
+
+      try {
+        const response = await fetch('/api/admin/settings', {
+          method: 'PUT',
+          headers: getAuthHeaders(),
+          body: JSON.stringify(setData)
+        });
+        if (response.ok) {
+          alert('Tənzimləmələr yeniləndi!');
+          fetchData();
+        } else {
+          alert('Yenilənmə alınmadı.');
+        }
+      } catch (err) { console.error(err); }
+    }
+
+    // Helper functions
+    function getStatusClass(status) {
+      const classes = {
+        'Gözləmədə': 'status-pending',
+        'Hazırlanır': 'status-processing',
+        'Yoldadır': 'status-shipping',
+        'Çatdırıldı': 'status-delivered',
+        'Ləğv edildi': 'status-cancelled'
+      };
+      return classes[status] || 'status-pending';
+    }
+  </script>
+</body>
+</html>

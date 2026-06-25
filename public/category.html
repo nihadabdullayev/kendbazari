@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Məhsullar | Kənd Bazarı</title>
+  <meta name="description" content="Azərbaycanın müxtəlif rayonlarından tamamilə təbii, orqanik kənd məhsullarının onlayn kataloqu. Süd, tərəvəz, bal və taxıl məhsulları.">
+  <meta property="og:title" content="Məhsullar | Kənd Bazarı">
+  <meta property="og:description" content="Azərbaycanın müxtəlif rayonlarından tamamilə təbii, orqanik kənd məhsullarının onlayn kataloqu. Süd, tərəvəz, bal və taxıl məhsulları.">
+  <meta property="og:type" content="website">
+  
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    .shop-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: var(--spacing-xxl);
+      margin-top: var(--spacing-xl);
+    }
+    
+    .sidebar {
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+    }
+    
+    .filter-section {
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .filter-section__title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .filter-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+    
+    .filter-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      font-size: 0.95rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+    
+    .filter-item input[type="checkbox"],
+    .filter-item input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-sm);
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    
+    .size-boxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+    }
+    
+    .size-box-label {
+      cursor: pointer;
+    }
+    
+    .size-box-label input {
+      position: absolute;
+      opacity: 0;
+    }
+    
+    .size-box {
+      min-width: 40px;
+      height: 40px;
+      padding: 0 var(--spacing-sm);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+    }
+    
+    .size-box-label input:checked + .size-box {
+      border-color: var(--text-primary);
+      background-color: var(--text-primary);
+      color: var(--bg-primary);
+    }
+
+    .shop-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .sort-select {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-medium);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .shop-layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        position: static;
+        display: none;
+      }
+      .sidebar--active {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="announcement-bar">
+    İLK SİFARİŞƏ 10% ENDİRİM! • 30 AZN-DƏN YUXARI PULSUZ ÇATDIRILMA
+  </div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__container">
+      <a href="/" class="logo">
+        Kənd<span>Bazarı</span>
+      </a>
+
+      <nav class="nav">
+        <ul class="nav__list">
+          <li class="nav__item"><a href="/" class="nav__link">Ana Səhifə</a></li>
+          <li class="nav__item"><a href="/butun-mehsullar/" class="nav__link">Bütün Məhsullar</a></li>
+          <li class="nav__item"><a href="/sud-ve-agarti/" class="nav__link">Süd və Ağartı</a></li>
+          <li class="nav__item"><a href="/meybe-tereevez/" class="nav__link">Meyvə-Tərəvəz</a></li>
+          <li class="nav__item"><a href="/bal-ve-murebbeler/" class="nav__link">Bal və Mürəbbə</a></li>
+        </ul>
+      </nav>
+
+      <div class="header__actions">
+        <!-- Theme Toggle Button -->
+        <button class="action-btn theme-toggle-btn" aria-label="Temanı Dəyiş" id="theme-toggle-btn">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        </button>
+
+        <a href="/cart/" class="action-btn" aria-label="Səbət" style="position: relative;">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+          <span class="cart-count">0</span>
+        </a>
+
+        <div class="menu-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container section-padding">
+    <nav class="breadcrumbs" aria-label="Breadcrumb" id="category-breadcrumbs"></nav>
+    <div class="shop-header">
+      <div>
+        <h1 style="font-family: var(--font-display); font-size: 2rem; font-weight: 800;" id="page-title">Bütün Məhsullar</h1>
+        <div class="category-seo-desc category-seo-desc--top" id="category-seo-top"></div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;" id="product-count">0 Məhsul Tapıldı</p>
+      </div>
+
+      <div style="display: flex; gap: var(--spacing-sm);">
+        <button class="btn btn--secondary btn--sm" id="mobile-filter-btn" style="display: none; border-radius: var(--radius-md);">Filtrlə</button>
+        <select class="sort-select" id="sort-select">
+          <option value="featured">Seçilənlər</option>
+          <option value="price-asc">Qiymət: Ucuzdan Bahaya</option>
+          <option value="price-desc">Qiymət: Bahadan Ucuza</option>
+          <option value="rating">Reytinqə Görə</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="shop-layout">
+      <!-- SIDEBAR FILTERS -->
+      <aside class="sidebar" id="shop-sidebar">
+        <!-- Categories Filter -->
+        <div class="filter-section">
+          <h3 class="filter-section__title">Kateqoriyalar</h3>
+          <div class="filter-list" id="category-filter-list">
+            <!-- Radio selection -->
+          </div>
+        </div>
+
+        <!-- Price Range Filter -->
+        <div class="filter-section">
+          <h3 class="filter-section__title">Maks. Qiymət</h3>
+          <div style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
+            <input type="range" id="price-range" min="0" max="100" step="1" value="100" style="width: 100%; accent-color: var(--primary);">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary);">
+              <span>0 AZN</span>
+              <span id="price-range-val" style="font-weight: 600;">100 AZN</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Packaging Filter -->
+        <div class="filter-section">
+          <h3 class="filter-section__title">Qablaşdırma</h3>
+          <div class="filter-list" id="packaging-filter-list">
+            <!-- Checkboxes -->
+          </div>
+        </div>
+
+        <!-- Sizes Filter (Weight / Qty) -->
+        <div class="filter-section">
+          <h3 class="filter-section__title">Çəki / Həcm</h3>
+          <div class="size-boxes" id="size-filter-list">
+            <!-- Checkboxes -->
+          </div>
+        </div>
+
+        <button class="btn btn--primary btn--full btn--sm" id="reset-filters-btn" style="border-radius: var(--radius-md);">Filtrləri Təmizlə</button>
+      </aside>
+
+      <!-- PRODUCTS CONTAINER -->
+      <section>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--spacing-xl);" id="shop-products-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+    </div>
+    <div class="category-seo-desc category-seo-desc--bottom" id="category-seo-bottom"></div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom">
+        <p>&copy; 2026 Kənd Bazarı. Bütün hüquqlar qorunur.</p>
+        <p>Təbii və Sağlam Seçim</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/db.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await window.initDb();
+      if (!window.mockDB) return;
+
+      // Read category slug from URL path: /:cat/ -> slug, or '/' -> all
+      const pathParts = window.location.pathname.replace(/^\//, '').replace(/\/$/, '').split('/');
+      const catSlug = pathParts[0] || '';
+      const foundCat = window.mockDB.categories.find(c => c.slug === catSlug);
+      let selectedCategory = foundCat ? foundCat.id : 'all';
+
+      let activeFilters = {
+        category: selectedCategory,
+        maxPrice: 100,
+        packagings: [],
+        sizes: []
+      };
+
+      updatePageHeader();
+
+      // Setup Category List
+      const catList = document.getElementById('category-filter-list');
+      catList.innerHTML = `
+        <label class="filter-item">
+          <input type="radio" name="cat-radio" value="all" ${selectedCategory === 'all' ? 'checked' : ''}>
+          <span>Bütün Məhsullar</span>
+        </label>
+      ` + window.mockDB.categories.map(c => `
+        <label class="filter-item">
+          <input type="radio" name="cat-radio" value="${c.id}" ${selectedCategory === c.id ? 'checked' : ''} data-slug="${c.slug}">
+          <span>${c.name}</span>
+        </label>
+      `).join('');
+
+      // Setup Packaging List
+      const packagingFilterList = document.getElementById('packaging-filter-list');
+      const uniquePackagings = [];
+      window.mockDB.products.forEach(p => {
+        p.colors.forEach(c => {
+          if (!uniquePackagings.includes(c.name)) {
+            uniquePackagings.push(c.name);
+          }
+        });
+      });
+      packagingFilterList.innerHTML = uniquePackagings.map(pkg => `
+        <label class="filter-item">
+          <input type="checkbox" value="${pkg}" class="packaging-checkbox">
+          <span>${pkg}</span>
+        </label>
+      `).join('');
+
+      // Setup Sizes List (Weight / Quantity)
+      const sizesFilterList = document.getElementById('size-filter-list');
+      const uniqueSizes = [...new Set(window.mockDB.products.flatMap(p => p.sizes))].filter(Boolean);
+      sizesFilterList.innerHTML = uniqueSizes.map(s => `
+        <label class="size-box-label">
+          <input type="checkbox" value="${s}" class="size-checkbox">
+          <span class="size-box">${s}</span>
+        </label>
+      `).join('');
+
+      // Event Listeners
+      document.getElementsByName('cat-radio').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          activeFilters.category = e.target.value;
+          // Update URL to reflect new category without page reload
+          const newCat = window.mockDB.categories.find(c => c.id === e.target.value);
+          const newPath = newCat ? `/${newCat.slug}/` : '/butun-mehsullar/';
+          window.history.pushState({}, '', newPath);
+          updatePageHeader();
+          renderProducts();
+        });
+      });
+
+      const priceRange = document.getElementById('price-range');
+      const priceVal = document.getElementById('price-range-val');
+      priceRange.addEventListener('input', (e) => {
+        activeFilters.maxPrice = parseFloat(e.target.value);
+        priceVal.textContent = activeFilters.maxPrice.toLocaleString('az-AZ') + ' AZN';
+        renderProducts();
+      });
+
+      document.getElementById('packaging-filter-list').addEventListener('change', () => {
+        activeFilters.packagings = Array.from(document.querySelectorAll('.packaging-checkbox:checked')).map(el => el.value);
+        renderProducts();
+      });
+
+      document.getElementById('size-filter-list').addEventListener('change', () => {
+        activeFilters.sizes = Array.from(document.querySelectorAll('.size-checkbox:checked')).map(el => el.value);
+        renderProducts();
+      });
+
+      const sortSelect = document.getElementById('sort-select');
+      sortSelect.addEventListener('change', renderProducts);
+
+      document.getElementById('reset-filters-btn').addEventListener('click', () => {
+        activeFilters = {
+          category: 'all',
+          maxPrice: 100,
+          packagings: [],
+          sizes: []
+        };
+        priceRange.value = 100;
+        priceVal.textContent = '100 AZN';
+        document.querySelectorAll('.packaging-checkbox:checked').forEach(cb => cb.checked = false);
+        document.querySelectorAll('.size-checkbox:checked').forEach(cb => cb.checked = false);
+        document.getElementsByName('cat-radio').forEach(radio => {
+          radio.checked = radio.value === 'all';
+        });
+        sortSelect.value = 'featured';
+        updatePageHeader();
+        renderProducts();
+      });
+
+      const mobileFilterBtn = document.getElementById('mobile-filter-btn');
+      const sidebar = document.getElementById('shop-sidebar');
+      if (mobileFilterBtn && sidebar) {
+        if (window.innerWidth <= 768) mobileFilterBtn.style.display = 'block';
+        window.addEventListener('resize', () => {
+          mobileFilterBtn.style.display = window.innerWidth <= 768 ? 'block' : 'none';
+        });
+        mobileFilterBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('sidebar--active');
+          mobileFilterBtn.textContent = sidebar.classList.contains('sidebar--active') ? 'Kapat' : 'Filtrlə';
+        });
+      }
+
+      renderProducts();
+
+      function updatePageHeader() {
+        const titleEl = document.getElementById('page-title');
+        const breadcrumbsEl = document.getElementById('category-breadcrumbs');
+        const seoTopEl = document.getElementById('category-seo-top');
+        const seoBottomEl = document.getElementById('category-seo-bottom');
+
+        let categoryName = 'Bütün Məhsullar';
+        let descTop = 'Azərbaycanın müxtəlif kəndlərindən birbaşa istehsalçıdan (kəndlidən) qapınıza gələn 100% təbii, qatqısız və orqanik kənd məhsulları. Süd məhsulları, təzə tərəvəzlər, xalis bal və təbii çörəklər.';
+        let descBottom = 'Kənd Bazarı olaraq məqsədimiz sizə ən sağlam və təbii qidaları çatdırmaqdır. Məhsullarımız kəndlilərimiz tərəfindən ənənəvi üsullarla hazırlanır və keyfiyyətinə tam zəmanət verilir. Onlayn sifariş edin, təbiiliyi hiss edin.';
+
+        if (activeFilters.category !== 'all') {
+          const categoryObj = window.mockDB.categories.find(c => c.id === activeFilters.category);
+          if (categoryObj) {
+            categoryName = categoryObj.name;
+            descTop = categoryObj.descriptionTop || '';
+            descBottom = categoryObj.descriptionBottom || '';
+          }
+        }
+
+        titleEl.textContent = categoryName;
+        seoTopEl.textContent = descTop;
+        seoBottomEl.textContent = descBottom;
+
+        const pageTitleText = `${categoryName} | Kənd Bazarı`;
+        document.title = pageTitleText;
+        setMetaDescription(descTop);
+        setOGTags({
+          title: pageTitleText,
+          description: descTop,
+          url: window.location.href
+        });
+
+        // JSON-LD Breadcrumbs
+        const breadcrumbItems = [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Ana Səhifə",
+            "item": window.location.origin + "/"
+          }
+        ];
+
+        if (activeFilters.category === 'all') {
+          breadcrumbItems.push({
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Bütün Məhsullar",
+            "item": window.location.origin + "/butun-mehsullar/"
+          });
+        } else {
+          breadcrumbItems.push({
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Bütün Məhsullar",
+            "item": window.location.origin + "/butun-mehsullar/"
+          });
+          const activeCatObj = window.mockDB.categories.find(c => c.id === activeFilters.category);
+          breadcrumbItems.push({
+            "@type": "ListItem",
+            "position": 3,
+            "name": categoryName,
+            "item": window.location.origin + "/" + (activeCatObj ? activeCatObj.slug : '') + "/"
+          });
+        }
+
+        injectJSONLD({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": breadcrumbItems
+        }, 'category-breadcrumbs-jsonld');
+
+        if (activeFilters.category === 'all') {
+          breadcrumbsEl.innerHTML = `
+            <a href="/">Ana Səhifə</a>
+            <span class="breadcrumbs__separator">/</span>
+            <span class="breadcrumbs__current">Bütün Məhsullar</span>
+          `;
+        } else {
+          const activeCatObj2 = window.mockDB.categories.find(c => c.id === activeFilters.category);
+          breadcrumbsEl.innerHTML = `
+            <a href="/">Ana Səhifə</a>
+            <span class="breadcrumbs__separator">/</span>
+            <a href="/${activeCatObj2 ? activeCatObj2.slug + '/' : ''}">Bütün Məhsullar</a>
+            <span class="breadcrumbs__separator">/</span>
+            <span class="breadcrumbs__current">${categoryName}</span>
+          `;
+        }
+      }
+
+      function renderProducts() {
+        const grid = document.getElementById('shop-products-grid');
+        const countEl = document.getElementById('product-count');
+        if (!grid) return;
+
+        let filtered = window.mockDB.products.filter(p => {
+          if (activeFilters.category !== 'all' && p.category !== activeFilters.category) return false;
+          if (p.price > activeFilters.maxPrice) return false;
+          if (activeFilters.packagings.length > 0) {
+            const hasPkg = p.colors.some(c => activeFilters.packagings.includes(c.name));
+            if (!hasPkg) return false;
+          }
+          if (activeFilters.sizes.length > 0) {
+            const hasSize = p.sizes.some(s => activeFilters.sizes.includes(s));
+            if (!hasSize) return false;
+          }
+          return true;
+        });
+
+        const sortVal = sortSelect.value;
+        if (sortVal === 'price-asc') {
+          filtered.sort((a, b) => a.price - b.price);
+        } else if (sortVal === 'price-desc') {
+          filtered.sort((a, b) => b.price - a.price);
+        } else if (sortVal === 'rating') {
+          filtered.sort((a, b) => b.rating - a.rating);
+        }
+
+        countEl.textContent = `${filtered.length} Məhsul Tapıldı`;
+
+        if (filtered.length === 0) {
+          grid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: var(--spacing-xxl) 0;">
+              <div style="font-size: 3rem; margin-bottom: var(--spacing-md);">🔍</div>
+              <h3 style="font-family: var(--font-display); font-size: 1.2rem; font-weight: 600;">Kriteriyalara uyğun məhsul tapılmadı.</h3>
+              <p style="color: var(--text-muted); margin-top: var(--spacing-xs);">Filtrləri təmizləyərək yenidən yoxlayın.</p>
+            </div>
+          `;
+          return;
+        }
+
+        grid.innerHTML = filtered.map(product => {
+          const imgSecondary = product.images[1] || product.image;
+          const saleBadge = product.oldPrice ? `<span class="badge badge--sale" style="font-size: 0.65rem; padding: 2px 6px;">-${Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%</span>` : '';
+          const oldPriceHtml = product.oldPrice ? `<span class="product-card__old-price">${product.oldPrice.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN</span>` : '';
+          
+          return `
+            <div class="product-card">
+              <a href="/${window.mockDB.categories.find(c => c.id === product.category).slug}/${product.slug}/">
+                <div class="product-card__image-container">
+                  <div class="product-card__rating-badge">⭐ ${product.rating} <span>(${product.reviewsCount})</span></div>
+                  <img class="product-card__image product-card__image-primary" src="${product.image}" alt="${product.title}">
+                  <img class="product-card__image product-card__image-secondary" src="${imgSecondary}" alt="${product.title}">
+                </div>
+              </a>
+              <div class="product-card__actions">
+                <button class="btn btn--primary btn--sm product-card__quick-add btn--full" onclick="addToCart('${product.id}', 1)">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right: 4px;"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                  Səbətə At
+                </button>
+              </div>
+              <div class="product-card__content">
+                <div class="product-card__category">${window.mockDB.categories.find(c => c.id === product.category).name}</div>
+                <h3 class="product-card__title">
+                  <a href="/${window.mockDB.categories.find(c => c.id === product.category).slug}/${product.slug}/">${product.title}</a>
+                </h3>
+                <div class="product-card__price-wrapper" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                  <span class="product-card__price">${product.price.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN</span>
+                  ${oldPriceHtml}
+                  ${saleBadge}
+                </div>
+              </div>
+              <div class="product-card__producer-footer">
+                <img class="product-card__producer-footer-img" src="${product.producerImage}" alt="${product.producer}">
+                <div class="product-card__producer-footer-info">
+                  <span class="product-card__producer-footer-label">İstehsalçı</span>
+                  <span class="product-card__producer-footer-name">${product.producer}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    });
+  </script>
+</body>
+</html>

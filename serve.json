@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    { "source": "/cart", "destination": "/cart.html" },
+    { "source": "/cart/", "destination": "/cart.html" },
+    { "source": "/checkout", "destination": "/checkout.html" },
+    { "source": "/checkout/", "destination": "/checkout.html" },
+    { "source": "/success", "destination": "/success.html" },
+    { "source": "/success/", "destination": "/success.html" },
+    { "source": "/butun-mehsullar", "destination": "/category.html" },
+    { "source": "/butun-mehsullar/", "destination": "/category.html" },
+    { "source": "/:cat(sud-ve-agarti|meybe-tereevez|bal-ve-murebbeler|un-ve-taxil)/:product", "destination": "/product.html" },
+    { "source": "/:cat(sud-ve-agarti|meybe-tereevez|bal-ve-murebbeler|un-ve-taxil)/:product/", "destination": "/product.html" },
+    { "source": "/:cat(sud-ve-agarti|meybe-tereevez|bal-ve-murebbeler|un-ve-taxil)", "destination": "/category.html" },
+    { "source": "/:cat(sud-ve-agarti|meybe-tereevez|bal-ve-murebbeler|un-ve-taxil)/", "destination": "/category.html" }
+  ]
+}

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Səbətim | Kənd Bazarı</title>
+  <meta name="description" content="Kənd Bazarı alış-veriş səbətiniz. Sifarişinizi rəsmiləşdirərək təbii kənd məhsullarını qapınıza çatdırın.">
+  <meta property="og:title" content="Səbətim | Kənd Bazarı">
+  <meta property="og:description" content="Kənd Bazarı alış-veriş səbətiniz. Sifarişinizi rəsmiləşdirərək təbii kənd məhsullarını qapınıza çatdırın.">
+  <meta property="og:type" content="website">
+  
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    .cart-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--spacing-xxl);
+      margin-top: var(--spacing-xl);
+    }
+
+    .cart-items {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: 100px 2fr 1fr 100px 40px;
+      align-items: center;
+      gap: var(--spacing-lg);
+      padding: var(--spacing-lg);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      background-color: var(--bg-primary);
+    }
+
+    .cart-item__image {
+      aspect-ratio: 1/1;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+    }
+
+    .cart-item__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cart-item__details {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .cart-item__title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    .cart-item__options {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .cart-summary {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xl);
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+    }
+
+    .cart-summary__title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-bottom: var(--spacing-lg);
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: var(--spacing-sm);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      margin-bottom: var(--spacing-md);
+      color: var(--text-secondary);
+    }
+
+    .summary-row--total {
+      border-top: 1px solid var(--border-light);
+      padding-top: var(--spacing-md);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: var(--spacing-lg);
+    }
+
+    @media (max-width: 992px) {
+      .cart-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .cart-item {
+        grid-template-columns: 80px 1fr 40px;
+        grid-template-rows: auto auto;
+        gap: var(--spacing-md);
+      }
+
+      .cart-item__qty-box {
+        grid-column: 2;
+        grid-row: 2;
+      }
+
+      .cart-item__price-box {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__container">
+      <a href="/" class="logo">
+        Kənd<span>Bazarı</span>
+      </a>
+
+      <nav class="nav">
+        <ul class="nav__list">
+          <li><a href="/" class="nav__link">Ana Səhifə</a></li>
+          <li><a href="/butun-mehsullar/" class="nav__link">Bütün Məhsullar</a></li>
+          <li><a href="/sud-ve-agarti/" class="nav__link">Süd və Ağartı</a></li>
+          <li><a href="/meybe-tereevez/" class="nav__link">Meyvə-Tərəvəz</a></li>
+          <li><a href="/bal-ve-murebbeler/" class="nav__link">Bal və Mürəbbə</a></li>
+        </ul>
+      </nav>
+
+      <div class="header__actions">
+        <!-- Theme Toggle Button -->
+        <button class="action-btn theme-toggle-btn" aria-label="Temanı Dəyiş" id="theme-toggle-btn">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        </button>
+
+        <a href="/cart/" class="action-btn" aria-label="Səbət" style="position: relative;">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+          <span class="cart-count">0</span>
+        </a>
+
+        <div class="menu-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container section-padding">
+    <h1 style="font-family: var(--font-display); font-size: 2.2rem; font-weight: 800;">Alış-veriş Səbətim</h1>
+
+    <div class="cart-layout" id="cart-wrapper">
+      <!-- Left: Cart Items -->
+      <div class="cart-items" id="cart-items-container">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Right: Summary Box -->
+      <div class="cart-summary">
+        <h2 class="cart-summary__title">Sifariş Xülasəsi</h2>
+        
+        <div class="summary-row">
+          <span>Məbləğ</span>
+          <span id="summary-subtotal">0,00 AZN</span>
+        </div>
+        
+        <div class="summary-row">
+          <span>Çatdırılma</span>
+          <span id="summary-shipping">Pulsuz</span>
+        </div>
+
+        <div class="summary-row">
+          <span>ƏDV (20%)</span>
+          <span id="summary-tax">0,00 AZN</span>
+        </div>
+
+        <!-- Promocode field -->
+        <div style="margin: var(--spacing-lg) 0; display: flex; gap: var(--spacing-xs);">
+          <input type="text" placeholder="Promo Kod" class="form-input" style="padding: var(--spacing-sm) var(--spacing-md); height: 44px;" id="promo-input">
+          <button class="btn btn--secondary btn--sm" style="border-radius: var(--radius-md);" onclick="applyPromo()">Tətbiq Et</button>
+        </div>
+
+        <div class="summary-row summary-row--total">
+          <span>Cəmi Məbləğ</span>
+          <span id="summary-total">0,00 AZN</span>
+        </div>
+
+        <a href="/checkout/" class="btn btn--primary btn--full" style="margin-top: var(--spacing-lg); height: 50px;">Sifarışə Keç</a>
+      </div>
+    </div>
+
+    <!-- Empty cart layout placeholder -->
+    <div id="empty-cart-view" style="display: none; text-align: center; padding: var(--spacing-xxl) 0;">
+      <div style="font-size: 4rem; margin-bottom: var(--spacing-md);">🛒</div>
+      <h2 style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 700;">Səbətiniz boşdur.</h2>
+      <p style="color: var(--text-muted); margin-top: var(--spacing-xs); margin-bottom: var(--spacing-lg);">Təzə kənd məhsullarını kəşf edərək səbətinizi doldura bilərsiniz.</p>
+      <a href="/butun-mehsullar/" class="btn btn--primary">Alış-verişə Başla</a>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom">
+        <p>&copy; 2026 Kənd Bazarı. Bütün hüquqlar qorunur.</p>
+        <p>Təbii və Sağlam Seçim</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/db.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await window.initDb();
+      renderCart();
+      window.addEventListener('cartUpdated', renderCart);
+    });
+
+    function renderCart() {
+      const cart = window.getCart();
+      const container = document.getElementById('cart-items-container');
+      const cartWrapper = document.getElementById('cart-wrapper');
+      const emptyView = document.getElementById('empty-cart-view');
+
+      if (cart.length === 0) {
+        cartWrapper.style.display = 'none';
+        emptyView.style.display = 'block';
+        return;
+      }
+
+      cartWrapper.style.display = 'grid';
+      emptyView.style.display = 'none';
+
+      container.innerHTML = cart.map((item, index) => {
+        let optionsStr = '';
+        if (item.options) {
+          optionsStr = Object.entries(item.options)
+            .map(([key, val]) => `${key}: ${val}`)
+            .join(' | ');
+        }
+
+        return `
+          <div class="cart-item">
+            <a href="/${window.mockDB?.categories?.find(c => c.id === item.category)?.slug || ''}/${item.slug || item.id}/" class="cart-item__image" style="display: block;">
+              <img src="${item.image}" alt="${item.title}" style="width: 80px; height: 80px; object-fit: cover; border-radius: var(--radius-sm);">
+            </a>
+            
+            <div class="cart-item__details">
+              <a href="/${window.mockDB?.categories?.find(c => c.id === item.category)?.slug || ''}/${item.slug || item.id}/" style="text-decoration: none; color: inherit;">
+                <h3 class="cart-item__title">${item.title}</h3>
+              </a>
+              <p class="cart-item__options">${optionsStr}</p>
+            </div>
+
+            <!-- Qty Selector -->
+            <div class="quantity-selector cart-item__qty-box" style="height: 40px;">
+              <div class="quantity-btn" style="width: 32px;" onclick="changeQty(${index}, -1)">&minus;</div>
+              <input type="text" class="quantity-input" style="width: 36px; font-size: 0.9rem;" value="${item.quantity}" readonly>
+              <div class="quantity-btn" style="width: 32px;" onclick="changeQty(${index}, 1)">&plus;</div>
+            </div>
+
+            <!-- Price -->
+            <div class="cart-item__price-box" style="font-family: var(--font-display); font-weight: 700; font-size: 1.05rem;">
+              ${(item.price * item.quantity).toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN
+            </div>
+
+            <!-- Remove Button -->
+            <button onclick="window.removeFromCart(${index})" style="color: var(--error); cursor: pointer; text-align: right; font-size: 1.2rem; background:none; border:none; display: flex; align-items: center; justify-content: flex-end;">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const shipping = 0;
+      const tax = subtotal * 0.20;
+      const total = subtotal + shipping;
+
+      document.getElementById('summary-subtotal').textContent = `${subtotal.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN`;
+      document.getElementById('summary-tax').textContent = `${tax.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN`;
+      document.getElementById('summary-total').textContent = `${total.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN`;
+    }
+
+    function changeQty(index, amount) {
+      const cart = window.getCart();
+      if (cart[index]) {
+        const newQty = Math.max(1, cart[index].quantity + amount);
+        window.updateCartQuantity(index, newQty);
+      }
+    }
+
+    function applyPromo() {
+      const input = document.getElementById('promo-input').value.trim();
+      if (input) {
+        alert(`"${input}" kodu tətbiq edildi!`);
+      }
+    }
+  </script>
+</body>
+</html>

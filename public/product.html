@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Məhsul Detalı | Kənd Bazarı</title>
+  <meta name="description" content="Orqanik kənd məhsulunun qiyməti, istehsalçı məlumatları və müştəri rəyləri ilə tanış olun. Birbaşa istehsalçıdan təbii məhsullar.">
+  <meta property="og:title" content="Məhsul Detalı | Kənd Bazarı">
+  <meta property="og:description" content="Orqanik kənd məhsulunun qiyməti, istehsalçı məlumatları və müştəri rəyləri ilə tanış olun. Birbaşa istehsalçıdan təbii məhsullar.">
+  <meta property="og:type" content="product">
+  
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    .product-detail-grid {
+      display: grid;
+      grid-template-columns: 2.4fr 1fr;
+      gap: var(--spacing-xl);
+      margin-top: var(--spacing-xl);
+      align-items: start;
+    }
+
+    .product-main-info-row {
+      display: grid;
+      grid-template-columns: 1.2fr 1.2fr;
+      gap: var(--spacing-xl);
+      align-items: start;
+    }
+
+    .gallery {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      position: sticky;
+      top: 100px;
+    }
+    
+    .gallery__main {
+      aspect-ratio: 1/1;
+      background-color: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+    }
+
+    .gallery__main img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery__thumbnails {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+
+    .gallery__thumb {
+      width: 80px;
+      height: 80px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+      background-color: var(--bg-secondary);
+      transition: all var(--transition-fast);
+    }
+
+    .gallery__thumb--active {
+      border-color: var(--primary);
+    }
+
+    .gallery__thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-info {
+      padding-top: var(--spacing-xs);
+    }
+
+    .product-info__title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    /* Minimalist Meta Row under Title */
+    .product-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .sku-badge {
+      font-family: monospace;
+      background-color: var(--bg-tertiary);
+      padding: 1px 6px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    /* Redesigned Producer Bio Card */
+    .producer-card {
+      background-color: var(--bg-secondary);
+      border: 1px dashed var(--border-medium);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      margin-top: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .producer-card__top {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    .producer-card__img {
+      width: 76px;
+      height: 76px;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      border: 3px solid var(--primary);
+      flex-shrink: 0;
+      box-shadow: var(--shadow-md);
+    }
+
+    .producer-card__img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .producer-card__info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .producer-card__label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .producer-card__name-wrapper {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      margin-top: 2px;
+    }
+
+    .producer-card__name {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+
+    .producer-card__badge {
+      background-color: var(--primary);
+      color: #fff;
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .producer-card__bio {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      border-top: 1px solid var(--border-light);
+      padding-top: var(--spacing-sm);
+      width: 100%;
+    }
+
+    /* Optimized & Compact Buy Box (Column 3) */
+    .buy-box {
+      background-color: var(--bg-surface);
+      border: 2px solid var(--color-primary); /* Striking theme green border */
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-lg);
+      box-shadow: 0 12px 30px rgba(45, 106, 79, 0.15); /* Premium green tint shadow */
+      position: sticky;
+      top: 100px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      z-index: 10;
+    }
+
+    /* Floating Cart Drawer */
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: -380px;
+  width: 380px;
+  max-width: 95%;
+  height: 100vh;
+  background-color: var(--bg-primary);
+  border-left: 1px solid var(--border-light);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.15);
+  padding: var(--spacing-lg);
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+.cart-drawer.open {
+  right: 0;
+}
+.cart-drawer .close-btn {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: var(--text-primary);
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+.cart-drawer .close-btn:hover {
+  opacity: 1;
+}
+.cart-drawer h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: var(--spacing-sm);
+}
+.cart-drawer .cart-items {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: var(--spacing-sm);
+  padding-right: 4px;
+}
+.cart-drawer .cart-totals {
+  padding: var(--spacing-md) 0;
+  border-top: 1px solid var(--border-light);
+  margin-top: auto;
+}
+.cart-drawer .cart-totals .totals-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+.cart-drawer .cart-totals .totals-row.total-amount {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: var(--spacing-xs);
+  border-top: 1px dashed var(--border-medium);
+  padding-top: var(--spacing-xs);
+}
+.cart-drawer .cart-actions {
+  margin-top: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+.cart-drawer .cart-actions .btn {
+  width: 100%;
+}
+.cart-drawer .empty-msg {
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: var(--spacing-xxl);
+  font-family: var(--font-body);
+}
+.cart-drawer .checkout-btn {
+  background-color: var(--primary);
+  color: #fff;
+}
+.cart-drawer .checkout-btn:hover {
+  background-color: var(--primary-hover);
+}
+.cart-drawer .continue-btn {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+}
+.cart-drawer .continue-btn:hover {
+  background-color: var(--border-light);
+}
+.product-reviews-section {
+      margin-top: var(--spacing-xxl);
+      border-top: 1px solid var(--border-light);
+      padding-top: var(--spacing-xl);
+    }
+
+    /* Expandable Review Form Styles */
+    .expandable-fields {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.4s ease, opacity 0.4s ease, margin 0.4s ease;
+    }
+
+    .reviews-form--expanded .expandable-fields {
+      max-height: 600px;
+      opacity: 1;
+      margin-top: var(--spacing-md);
+    }
+
+    .reviews-form--expanded #review-text {
+      height: 90px !important;
+    }
+
+    .buy-box__price-box {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      flex-wrap: nowrap;
+      padding-bottom: var(--spacing-sm);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .buy-box__price {
+      font-size: 1.9rem; /* Much larger price font size */
+      font-weight: 900;
+      color: var(--color-primary); /* Forest green color for visual punch */
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .buy-box__old-price {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      text-decoration: line-through;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .option-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: var(--spacing-xs);
+      display: block;
+      color: var(--text-secondary);
+    }
+
+    .variant-selector {
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .pack-select-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-xs);
+    }
+
+    .pack-select-item {
+      cursor: pointer;
+      position: relative;
+    }
+
+    .pack-select-item input {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .pack-select-box {
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+      background-color: var(--bg-primary);
+    }
+
+    .pack-select-item input:checked + .pack-select-box {
+      border-color: var(--primary);
+      background-color: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .size-select-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-xs);
+    }
+
+    .size-select-item {
+      cursor: pointer;
+    }
+
+    .size-select-item input {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .size-select-box {
+      min-width: 38px;
+      height: 34px;
+      padding: 0 var(--spacing-sm);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all var(--transition-fast);
+      background-color: var(--bg-primary);
+    }
+
+    .size-select-item input:checked + .size-select-box {
+      border-color: var(--text-primary);
+      background-color: var(--text-primary);
+      color: var(--bg-primary);
+    }
+
+    .purchase-row-compact {
+      display: flex;
+      gap: var(--spacing-xs);
+      align-items: center;
+      width: 100%;
+    }
+
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      height: 44px;
+      overflow: hidden;
+      background-color: var(--bg-secondary);
+      flex-shrink: 0;
+    }
+
+    .quantity-btn {
+      width: 34px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color var(--transition-fast);
+    }
+
+    .quantity-btn:hover {
+      background-color: var(--border-light);
+    }
+
+    .quantity-input {
+      width: 36px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .purchase-actions {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+      width: 100%;
+    }
+
+    .accordion {
+      border-top: 1px solid var(--border-light);
+      margin-top: var(--spacing-md);
+    }
+
+    .accordion__item {
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .accordion__header {
+      width: 100%;
+      padding: var(--spacing-md) 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1.05rem;
+      cursor: pointer;
+    }
+
+    .accordion__content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height var(--transition-normal) ease-out;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      padding-bottom: 0;
+    }
+
+    .accordion__content-inner {
+      padding-bottom: var(--spacing-md);
+      line-height: 1.6;
+    }
+
+    .accordion__item--active .accordion__content {
+      max-height: 500px;
+      transition: max-height var(--transition-normal) ease-in;
+    }
+
+    .accordion__icon {
+      transition: transform var(--transition-normal);
+    }
+
+    .accordion__item--active .accordion__icon {
+      transform: rotate(180deg);
+    }
+
+    /* Reviews Section Grid */
+    .reviews-layout {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr;
+      gap: var(--spacing-xxl);
+      margin-top: var(--spacing-lg);
+    }
+
+    .review-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .review-card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .review-card__user {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .review-card__stars {
+      color: var(--warning);
+      letter-spacing: 2px;
+    }
+
+    .review-card__date {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .review-card__text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .reviews-form-col {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+    }
+
+    .star-rating-picker {
+      display: flex;
+      gap: 6px;
+      font-size: 1.8rem;
+      color: var(--border-medium);
+      cursor: pointer;
+      margin: var(--spacing-xs) 0;
+    }
+
+    .star-rating-picker span {
+      transition: color var(--transition-fast);
+    }
+
+    .star-rating-picker span.active {
+      color: var(--warning);
+    }
+
+    @media (max-width: 992px) {
+      .product-detail-grid {
+        grid-template-columns: 1fr;
+      }
+      .product-main-info-row {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+      }
+      .gallery {
+        position: static;
+      }
+      .buy-box {
+        position: static;
+        grid-column: auto;
+        grid-row: auto;
+      }
+      .product-reviews-section {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="announcement-bar">
+    İLK SİFARİŞƏ 10% ENDİRİM! • 30 AZN-DƏN YUXARI PULSUZ ÇATDIRILMA
+  </div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__container">
+      <a href="/" class="logo">
+        Kənd<span>Bazarı</span>
+      </a>
+
+      <nav class="nav">
+        <ul class="nav__list">
+          <li class="nav__item"><a href="/" class="nav__link">Ana Səhifə</a></li>
+          <li class="nav__item"><a href="/butun-mehsullar/" class="nav__link">Bütün Məhsullar</a></li>
+          <li class="nav__item"><a href="/sud-ve-agarti/" class="nav__link">Süd və Ağartı</a></li>
+          <li class="nav__item"><a href="/meybe-tereevez/" class="nav__link">Meyvə-Tərəvəz</a></li>
+          <li class="nav__item"><a href="/bal-ve-murebbeler/" class="nav__link">Bal və Mürəbbə</a></li>
+        </ul>
+      </nav>
+
+      <div class="header__actions">
+        <!-- Theme Toggle Button -->
+        <button class="action-btn theme-toggle-btn" aria-label="Temanı Dəyiş" id="theme-toggle-btn">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        </button>
+
+        <a href="/cart/" class="action-btn" aria-label="Səbət" style="position: relative;">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+          <span class="cart-count">0</span>
+        </a>
+
+        <div class="menu-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container section-padding" id="product-detail-container">
+    <div style="text-align: center; padding: var(--spacing-xxl) 0;">
+      <p style="color: var(--text-muted);">Məhsul məlumatları yüklənir...</p>
+    </div>
+  </main>
+  <!-- Cart Drawer -->
+  <div class="cart-drawer" id="cart-drawer">
+    <button class="close-btn" aria-label="Bağla">&times;</button>
+    <h2>Səbətiniz</h2>
+    <div class="cart-items" id="cart-items-container"></div>
+    <div class="cart-totals" id="cart-totals"></div>
+    <div class="cart-actions">
+      <button class="btn continue-btn">Alışa Davam Et</button>
+      <button class="btn checkout-btn">Sifarişi Tamamla</button>
+    </div>
+  </div>
+
+
+
+  <!-- RELATED PRODUCTS -->
+  <section class="container section-padding" style="border-top: 1px solid var(--border-light);">
+    <div style="margin-bottom: var(--spacing-xl);">
+      <h2 style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 800;">Oxşar Məhsullar</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--spacing-xl);" id="related-products-grid">
+      <!-- Loaded dynamically -->
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom">
+        <p>&copy; 2026 Kənd Bazarı. Bütün hüquqlar qorunur.</p>
+        <p>Təbii və Sağlam Seçim</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/db.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    // Cart drawer functionality
+    const drawer = document.getElementById('cart-drawer');
+    const closeBtn = drawer.querySelector('.close-btn');
+    const continueBtn = drawer.querySelector('.continue-btn');
+    const checkoutBtn = drawer.querySelector('.checkout-btn');
+
+    function openCartDrawer() {
+  console.log('Cart drawer opened');
+      drawer.classList.add('open');
+      renderCartItems();
+    }
+    function closeCartDrawer() {
+      drawer.classList.remove('open');
+    }
+    closeBtn.addEventListener('click', closeCartDrawer);
+    continueBtn.addEventListener('click', closeCartDrawer);
+    checkoutBtn.addEventListener('click', () => {
+      window.location.href = '/checkout/';
+    });
+    function renderCartItems() {
+      const cart = getCart();
+      const container = drawer.querySelector('.cart-items');
+      const totalsContainer = drawer.querySelector('#cart-totals');
+      
+      if (cart.length === 0) {
+        container.innerHTML = '<p class="empty-msg">Səbətiniz boşdur.</p>';
+        if (totalsContainer) totalsContainer.innerHTML = '';
+        return;
+      }
+      
+      // Calculate Subtotal & Total
+      let subtotal = 0;
+      let totalDiscount = 0;
+      
+      container.innerHTML = cart.map((item, index) => {
+        const itemPrice = item.price || 0;
+        const itemQty = item.quantity || 1;
+        const itemTotal = itemPrice * itemQty;
+        subtotal += itemTotal;
+        
+        let oldPriceHtml = '';
+        if (item.oldPrice && item.oldPrice > itemPrice) {
+          const discount = (item.oldPrice - itemPrice) * itemQty;
+          totalDiscount += discount;
+          oldPriceHtml = `<span style="text-decoration:line-through; font-size: 0.85rem; color: var(--text-muted); margin-left: var(--spacing-xs);">${(item.oldPrice * itemQty).toLocaleString('az-AZ', {minimumFractionDigits:2})} AZN</span>`;
+        }
+        
+        return `
+          <div class="cart-item" style="display:flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-md); align-items:center; border-bottom: 1px solid var(--border-light); padding-bottom: var(--spacing-sm);">
+            <a href="/${window.mockDB.categories.find(c => c.id === item.category)?.slug || ''}/${item.slug || item.id}/" style="display:block; flex-shrink:0;">
+              <img src="${item.image}" alt="${item.title}" style="width:60px; height:60px; object-fit:cover; border-radius: var(--radius-sm); border: 1px solid var(--border-light);">
+            </a>
+            <div style="flex:1;">
+              <a href="/${window.mockDB.categories.find(c => c.id === item.category)?.slug || ''}/${item.slug || item.id}/" style="text-decoration:none; color:inherit; display:block;">
+                <p style="margin:0 0 var(--spacing-xs) 0; font-weight:600; font-family: var(--font-display); color: var(--text-primary); font-size: 0.95rem;">${item.title}</p>
+              </a>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="cart-item-quantity">
+                  <button class="qty-btn" onclick="adjustCartItemQty(${index}, -1)">&minus;</button>
+                  <span class="qty-value">${itemQty}</span>
+                  <button class="qty-btn" onclick="adjustCartItemQty(${index}, 1)">&plus;</button>
+                </div>
+                <div style="display:flex; align-items:center; gap: var(--spacing-xs);">
+                  <p style="margin:0; font-size: 0.95rem; font-weight:700; color: var(--primary);">
+                    ${itemTotal.toLocaleString('az-AZ', {minimumFractionDigits:2})} AZN
+                    ${oldPriceHtml}
+                  </p>
+                  <button onclick="removeFromCart(${index})" style="color: var(--error); cursor: pointer; background:none; border:none; display: flex; align-items: center; justify-content: center; padding: 4px;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      // Update Totals section
+      if (totalsContainer) {
+        let discountHtml = '';
+        if (totalDiscount > 0) {
+          discountHtml = `
+            <div class="totals-row" style="color: var(--error);">
+              <span>Endirim:</span>
+              <span>-${totalDiscount.toLocaleString('az-AZ', {minimumFractionDigits:2})} AZN</span>
+            </div>
+          `;
+        }
+        
+        const finalTotal = subtotal;
+        
+        totalsContainer.innerHTML = `
+          <div class="totals-row">
+            <span>Məhsullar:</span>
+            <span>${(subtotal + totalDiscount).toLocaleString('az-AZ', {minimumFractionDigits:2})} AZN</span>
+          </div>
+          ${discountHtml}
+          <div class="totals-row total-amount">
+            <span>Cəm Yekun:</span>
+            <span>${finalTotal.toLocaleString('az-AZ', {minimumFractionDigits:2})} AZN</span>
+          </div>
+        `;
+      }
+    }
+    // Expose for external calls
+    window.openCartDrawer = openCartDrawer;
+    window.renderCartItems = renderCartItems;
+    window.addEventListener('cartUpdated', renderCartItems);
+  </script>
+  <script>
+    let activeSelectedStars = 5;
+    let currentProductId = 'p1';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await window.initDb();
+      if (!window.mockDB) return;
+
+      // Read slugs from URL path: /:cat/:product/
+      const pathParts = window.location.pathname.replace(/^\//, '').replace(/\/$/, '').split('/');
+      const catSlug = pathParts[0] || '';
+      const productSlug = pathParts[1] || '';
+      const foundCat = window.mockDB.categories.find(c => c.slug === catSlug);
+      const product = productSlug
+        ? window.mockDB.products.find(p => p.slug === productSlug)
+        : window.mockDB.products.find(p => p.id === (new URLSearchParams(window.location.search).get('id') || 'p1'));
+      currentProductId = product ? product.id : 'p1';
+
+      const container = document.getElementById('product-detail-container');
+
+      if (!product) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: var(--spacing-xxl) 0;">
+            <div style="font-size: 3rem; margin-bottom: var(--spacing-md);">⚠️</div>
+            <h2 style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 700;">Məhsul tapılmadı.</h2>
+            <a href="/butun-mehsullar/" class="btn btn--primary" style="margin-top: var(--spacing-md);">Alış-verişə Qayıt</a>
+          </div>
+        `;
+        return;
+      }
+
+      document.title = `${product.title} | Kənd Bazarı`;
+
+      // SEO Metadata Update
+      setMetaDescription(product.description);
+      setOGTags({
+        title: `${product.title} | Kənd Bazarı`,
+        description: product.description,
+        image: product.image,
+        type: 'product',
+        url: window.location.href
+      });
+
+      const categoryObj = window.mockDB.categories.find(c => c.id === product.category);
+      const categoryName = categoryObj ? categoryObj.name : 'Məhsullar';
+      const categoryId = categoryObj ? categoryObj.id : '';
+
+      // JSON-LD Product & Breadcrumb Schema
+      injectJSONLD({
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": product.title,
+        "image": product.image,
+        "description": product.description,
+        "sku": product.sku || `KB-${product.id}`,
+        "offers": {
+          "@type": "Offer",
+          "url": window.location.href,
+          "priceCurrency": "AZN",
+          "price": product.price,
+          "itemCondition": "https://schema.org/NewCondition",
+          "availability": product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": product.rating,
+          "reviewCount": product.reviewsCount
+        }
+      }, 'product-jsonld');
+
+      injectJSONLD({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Ana Səhifə",
+            "item": window.location.origin + "/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Bütün Məhsullar",
+            "item": window.location.origin + "/butun-mehsullar/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": categoryName,
+            "item": window.location.origin + "/" + (categoryObj ? categoryObj.slug : '') + "/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "name": product.title,
+            "item": window.location.origin + "/" + (categoryObj ? categoryObj.slug : '') + "/" + product.slug + "/"
+          }
+        ]
+      }, 'product-breadcrumbs-jsonld');
+
+      // Modified addToCart call logic inside page
+      function handleAddToCart(product) {
+          addToCart(product);
+          showToast(`${product.title} səbətə əlavə olundu!`);
+          // Open cart drawer after adding item
+          if (window.openCartDrawer) window.openCartDrawer();
+      }
+
+      const oldPriceHtml = product.oldPrice ? `<span class="buy-box__old-price" style="font-size: 1.15rem; color: var(--text-muted); text-decoration: line-through; white-space: nowrap;">${product.oldPrice.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN</span>` : '';
+      const saleBadge = product.oldPrice ? `<span class="badge badge--sale" style="padding: 4px 10px; font-size: 0.8rem; font-weight: 700; background-color: #ef4444; color: white; border-radius: 6px; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25); display: inline-flex; align-items: center; justify-content: center; text-transform: uppercase; border: none; line-height: 1;">-${Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}% ENDİRİM</span>` : '';
+      
+      let variantHtml = '';
+      const vName = product.variantName || (product.sizes && product.sizes.length > 0 ? 'Seçim' : '');
+      const vValues = (product.variantValues && product.variantValues.length > 0) ? product.variantValues : (product.sizes || []);
+      
+      if (vName && vValues.length > 0) {
+        variantHtml = `
+          <div class="variant-selector">
+            <span class="option-title">${vName}</span>
+            <div class="size-select-list">
+              ${vValues.map((val, idx) => `
+                <label class="size-select-item">
+                  <input type="radio" name="variant-opt" value="${val}" ${idx === 0 ? 'checked' : ''}>
+                  <span class="size-select-box">${val}</span>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // Read custom review data from API
+      let dynamicReviews = [];
+      try {
+        const revResponse = await fetch(`/api/products/${currentProductId}/reviews`);
+        if (revResponse.ok) {
+          dynamicReviews = await revResponse.json();
+        } else {
+          dynamicReviews = getReviewsForProduct(currentProductId);
+        }
+      } catch (err) {
+        console.error(err);
+        dynamicReviews = getReviewsForProduct(currentProductId);
+      }
+
+      // categoryObj, categoryName, categoryId already declared above
+
+      const breadcrumbsHtml = `
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <a href="/">Ana Səhifə</a>
+          <span class="breadcrumbs__separator">/</span>
+          <a href="/butun-mehsullar/">Bütün Məhsullar</a>
+          <span class="breadcrumbs__separator">/</span>
+          ${categoryObj ? `<a href="/${categoryObj.slug}/">${categoryName}</a>` : `<span>${categoryName}</span>`}
+          <span class="breadcrumbs__separator">/</span>
+          <span class="breadcrumbs__current">${product.title}</span>
+        </nav>
+      `;
+
+      container.innerHTML = `
+        ${breadcrumbsHtml}
+        <div class="product-detail-grid">
+          <!-- LEFT SIDE (Gallery, Info and Reviews) -->
+          <div class="product-detail-left">
+            <div class="product-main-info-row">
+              <!-- COLUMN 1: GALLERY -->
+              <div class="gallery">
+            <div class="gallery__main">
+              <img id="main-gallery-img" src="${product.image}" alt="${product.title}">
+            </div>
+            <div class="gallery__thumbnails">
+              ${product.images.map((img, idx) => `
+                <div class="gallery__thumb ${idx === 0 ? 'gallery__thumb--active' : ''}" onclick="changeGalleryImage(this, '${img}')">
+                  <img src="${img}" alt="${product.title} Thumbnail">
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- COLUMN 2: DETAILS & PRODUCER -->
+          <div class="product-info">
+            <h1 class="product-info__title">${product.title}</h1>
+
+            <div class="product-meta-row">
+              <span>Kateqoriya: <strong>${window.mockDB.categories.find(c => c.id === product.category).name}</strong></span>
+              <span>•</span>
+              <span>Stok Kodu: <span class="sku-badge">${product.sku || 'KB-GEN-01'}</span></span>
+              <span>•</span>
+              <span>⭐ <span id="meta-rating">${product.rating}</span> (<span id="meta-reviews-count">${dynamicReviews.length} Rəy</span>)</span>
+            </div>
+
+            <!-- Redesigned Producer Card directly below the title, metadata, and rating -->
+            <div class="producer-card">
+              <div class="producer-card__top">
+                <div class="producer-card__img">
+                  <img src="${product.producerImage || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80'}" alt="${product.producer}">
+                </div>
+                <div class="producer-card__info">
+                  <span class="producer-card__label">İstehsalçı</span>
+                  <div class="producer-card__name-wrapper">
+                    <h4 class="producer-card__name">${product.producer || 'Fatma Xala'}</h4>
+                    <span class="producer-card__badge">Təbii İstehsal</span>
+                  </div>
+                </div>
+              </div>
+              <div class="producer-card__bio">
+                ${product.producerBio || 'Ənənəvi üsullarla, kənd şəraitində heç bir kimyəvi qatqıdan istifadə etmədən hazırlanmış təbii məhsul.'}
+              </div>
+            </div>
+
+            <!-- Specs Accordion with Description inside -->
+            <div class="accordion">
+              <div class="accordion__item accordion__item--active" onclick="toggleAccordion(this)">
+                <button class="accordion__header">
+                  <span>Məhsul haqqında məlumat</span>
+                  <span class="accordion__icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg></span>
+                </button>
+                <div class="accordion__content">
+                  <div class="accordion__content-inner" style="color: var(--text-secondary); line-height: 1.7;">
+                    ${product.description}
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion__item" onclick="toggleAccordion(this)">
+                <button class="accordion__header">
+                  <span>Məhsulun Üstünlükləri</span>
+                  <span class="accordion__icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg></span>
+                </button>
+                <div class="accordion__content">
+                  <div class="accordion__content-inner">
+                    <ul style="list-style-type: disc; padding-left: var(--spacing-lg); display: flex; flex-direction: column; gap: var(--spacing-xs);">
+                      ${product.features.map(f => `<li>${f}</li>`).join('')}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion__item" onclick="toggleAccordion(this)">
+                <button class="accordion__header">
+                  <span>Çatdırılma Məlumatı</span>
+                  <span class="accordion__icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg></span>
+                </button>
+                <div class="accordion__content">
+                  <div class="accordion__content-inner">
+                    Bakı daxili sifarişlər 24 saat ərzində xüsusi soyuduculu avtomobillərlə tam təzə şəkildə ünvanınıza çatdırılır.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CUSTOMER REVIEWS (Spanning Column 1 and 2, below them) -->
+        <div class="product-reviews-section">
+          <h2 style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; margin-bottom: var(--spacing-md);">Müştəri Rəyləri</h2>
+          
+          <!-- Rəy Bildir (Form on top, compact initially) -->
+          <div class="reviews-form-wrapper" style="margin-bottom: var(--spacing-xl); background: var(--bg-secondary); padding: var(--spacing-lg); border-radius: var(--radius-lg); border: 1px solid var(--border-light);">
+            <h3 style="font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; margin-bottom: var(--spacing-md);">Rəy Bildir</h3>
+            <form id="add-review-form">
+              <!-- Textarea first to capture interaction -->
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" for="review-text" style="font-size: 0.8rem; font-weight: 600;">Rəyiniz</label>
+                <textarea id="review-text" class="form-input" placeholder="Məhsul haqqında fikirlərinizi yazın..." style="resize: none; font-size: 0.85rem; padding: var(--spacing-sm); height: 38px; transition: height 0.3s ease;" required></textarea>
+              </div>
+
+              <!-- Secondary fields (Expanded dynamically) -->
+              <div class="expandable-fields">
+                <!-- Adınız -->
+                <div class="form-group" style="margin-bottom: var(--spacing-sm);">
+                  <label class="form-label" for="review-name" style="font-size: 0.8rem; font-weight: 600;">Adınız</label>
+                  <input type="text" id="review-name" class="form-input" placeholder="Məs. Elnur M." style="height: 38px; font-size: 0.85rem;" required>
+                </div>
+
+                <!-- E-poçt (Gizli saxlanılır) -->
+                <div class="form-group" style="margin-bottom: var(--spacing-sm);">
+                  <label class="form-label" for="review-email" style="font-size: 0.8rem; font-weight: 600;">
+                    E-poçt ünvanınız 
+                    <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 400; text-transform: none; display: block; margin-top: 2px;">🛡️ E-poçtunuz tamamilə gizli saxlanılır və heç bir halda ictimaiyyətə açıqlanmır.</span>
+                  </label>
+                  <input type="email" id="review-email" class="form-input" placeholder="Məs. elnur@mail.com" style="height: 38px; font-size: 0.85rem;" required>
+                </div>
+                
+                <!-- Ulduz Qiyməti -->
+                <div class="form-group" style="margin-bottom: var(--spacing-sm);">
+                  <label class="form-label" style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">Ulduz Qiyməti</label>
+                  <div class="star-rating-picker" id="star-picker">
+                    <span class="active" data-value="1">★</span>
+                    <span class="active" data-value="2">★</span>
+                    <span class="active" data-value="3">★</span>
+                    <span class="active" data-value="4">★</span>
+                    <span class="active" data-value="5">★</span>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn--primary btn--full" style="height: 40px; font-size: 0.85rem; border-radius: var(--radius-md); margin-top: var(--spacing-sm);">Rəyi Göndər</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Reviews List -->
+          <div id="reviews-list-container">
+            <!-- Dynamically generated reviews -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COLUMN 3: OPTIMIZED & COMPACT PRICE & CHECKOUT BOX -->
+      <div class="buy-box">
+            <div class="buy-box__price-box" style="display: flex; flex-direction: column; align-items: flex-start; padding-bottom: var(--spacing-sm); border-bottom: 1px solid var(--border-light); width: 100%;">
+              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px;">
+                  ${product.oldPrice ? `<span class="buy-box__old-price" style="font-size: 1.15rem; color: var(--text-muted); text-decoration: line-through; white-space: nowrap;">${product.oldPrice.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN</span>` : ''}
+                  <span class="buy-box__price" style="font-size: 2.1rem; font-weight: 900; color: var(--color-primary); line-height: 1;">${product.price.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN</span>
+                </div>
+                ${product.oldPrice ? `
+                  <div style="padding: 8px 12px; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border-radius: var(--radius-md); font-weight: 800; font-size: 0.95rem; line-height: 1.1; text-align: center; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <span>-${Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%</span>
+                    <span style="font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px;">ENDİRİM</span>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+
+            ${variantHtml}
+
+            <!-- Quantity & Add to Cart Side-by-side -->
+            <div>
+              <span class="option-title">Miqdar və Sifariş</span>
+              <div class="purchase-row-compact">
+                <div class="quantity-selector">
+                  <div class="quantity-btn" onclick="adjustQty(-1)">&minus;</div>
+                  <input type="text" class="quantity-input" id="detail-qty" value="1" readonly>
+                  <div class="quantity-btn" onclick="adjustQty(1)">&plus;</div>
+                </div>
+                
+                <button class="btn btn--primary" id="add-to-cart-btn" style="flex-grow: 1; height: 44px; font-size: 0.85rem; padding: 0 var(--spacing-sm); border-radius: var(--radius-md);">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right: 2px;"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                  Səbətə At
+                </button>
+              </div>
+            </div>
+
+            <!-- Direct Buy Action -->
+            <div class="purchase-actions">
+              <button class="btn btn--secondary btn--full" id="buy-now-btn" style="height: 44px; font-size: 0.85rem; border-radius: var(--radius-md);">
+                İndi Al
+              </button>
+            </div>
+            
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-align: center; display: flex; align-items: center; justify-content: center; gap: 4px;">
+              <span>🔒 100% Təhlükəsiz Sifariş</span>
+            </div>
+          </div>
+
+        </div>
+      `;
+
+      // Render reviews list
+      renderReviews(dynamicReviews);
+
+      // Expand Review Form on Input
+      const reviewTextarea = document.getElementById('review-text');
+      const formWrapper = document.querySelector('.reviews-form-wrapper');
+      reviewTextarea.addEventListener('input', (e) => {
+        if (e.target.value.trim().length > 0) {
+          formWrapper.classList.add('reviews-form--expanded');
+        } else {
+          formWrapper.classList.remove('reviews-form--expanded');
+        }
+      });
+
+      // Star picker click bindings
+      const starSpans = document.querySelectorAll('#star-picker span');
+      starSpans.forEach(span => {
+        span.addEventListener('click', (e) => {
+          const val = parseInt(e.target.getAttribute('data-value'));
+          activeSelectedStars = val;
+          starSpans.forEach((s, idx) => {
+            if (idx < val) {
+              s.classList.add('active');
+            } else {
+              s.classList.remove('active');
+            }
+          });
+        });
+      });
+
+      // Submit Review Form
+      document.getElementById('add-review-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nameInput = document.getElementById('review-name');
+        const textInput = document.getElementById('review-text');
+
+        try {
+          const response = await fetch(`/api/products/${currentProductId}/reviews`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              name: nameInput.value.trim(),
+              rating: activeSelectedStars,
+              text: textInput.value.trim()
+            })
+          });
+
+          if (response.ok) {
+            // Re-fetch reviews to display
+            const revResponse = await fetch(`/api/products/${currentProductId}/reviews`);
+            const updatedList = await revResponse.json();
+            
+            // Recalculate average
+            const avg = parseFloat((updatedList.reduce((sum, r) => sum + r.rating, 0) / updatedList.length).toFixed(1));
+            document.getElementById('meta-rating').textContent = avg;
+            document.getElementById('meta-reviews-count').textContent = `${updatedList.length} Rəy`;
+            
+            renderReviews(updatedList);
+          } else {
+            alert('Rəy göndərilmədi!');
+          }
+        } catch (err) {
+          console.error(err);
+          alert('Şəbəkə xətası! Rəy göndərilə bilmədi.');
+        }
+
+        // Reset fields
+        nameInput.value = '';
+        textInput.value = '';
+        const emailInput = document.getElementById('review-email');
+        if (emailInput) emailInput.value = '';
+        activeSelectedStars = 5;
+        starSpans.forEach(s => s.classList.add('active'));
+        formWrapper.classList.remove('reviews-form--expanded');
+
+        // notify
+        if (window.updateCartBadge) {
+          // Trigger a notification
+          const toastContainer = document.querySelector('.toast-container');
+          if (toastContainer) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `⭐ <span>Rəyiniz uğurla göndərildi!</span>`;
+            toastContainer.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
+          }
+        }
+      });
+
+      // Set Up Cart Actions
+      document.getElementById('add-to-cart-btn').addEventListener('click', () => {
+        const qty = parseInt(document.getElementById('detail-qty').value);
+        const variantRadio = document.querySelector('input[name="variant-opt"]:checked');
+        
+        const options = {};
+        if (variantRadio) {
+          const vName = product.variantName || 'Seçim';
+          options[vName] = variantRadio.value;
+        }
+
+        window.addToCart(product.id, qty, options);
+      });
+
+      document.getElementById('buy-now-btn').addEventListener('click', () => {
+        const qty = parseInt(document.getElementById('detail-qty').value);
+        const variantRadio = document.querySelector('input[name="variant-opt"]:checked');
+        
+        const options = {};
+        if (variantRadio) {
+          const vName = product.variantName || 'Seçim';
+          options[vName] = variantRadio.value;
+        }
+
+        window.buyNow(product.id, qty, options);
+      });
+
+      renderRelatedProducts(product.category, product.id);
+    });
+
+    // LocalStorage Reviews logic
+    function getReviewsForProduct(productId) {
+      try {
+        const local = localStorage.getItem(`kb_reviews_${productId}`);
+        if (local) return JSON.parse(local);
+      } catch(e) {}
+
+      // Default mock reviews
+      const defaults = [
+        {
+          name: "Aysel M.",
+          rating: 5,
+          text: "Məhsuldan çox razı qaldım, tamamilə təbii kənd dadı verir. Qablaşdırma da möhkəm və təmiz idi.",
+          date: "14 İyun 2026"
+        },
+        {
+          name: "Elvin T.",
+          rating: 5,
+          text: "Uşaqlar üçün aldıq, çox bəyəndilər. Qatqısız olduğu dadından dərhal hiss olunur. Çatdırılma da vaxtında gəldi.",
+          date: "08 İyun 2026"
+        },
+        {
+          name: "Leyla K.",
+          rating: 4,
+          text: "Dadı çox gözəldir, sadəcə qablaşdırma bir az gec açıldı. Amma keyfiyyət əladır, tövsiyə edirəm.",
+          date: "28 May 2026"
+        }
+      ];
+      localStorage.setItem(`kb_reviews_${productId}`, JSON.stringify(defaults));
+      return defaults;
+    }
+
+    function renderReviews(reviews) {
+      const container = document.getElementById('reviews-list-container');
+      if (!container) return;
+
+      if (reviews.length === 0) {
+        container.innerHTML = `<p style="color: var(--text-muted);">Hələ ki rəy yazılmayıb. İlk rəyi siz yazın!</p>`;
+        return;
+      }
+
+      container.innerHTML = reviews.map(r => {
+        const starsHtml = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+        return `
+          <div class="review-card">
+            <div class="review-card__header">
+              <span class="review-card__user">${r.name}</span>
+              <span class="review-card__date">${r.date}</span>
+            </div>
+            <div class="review-card__stars">${starsHtml}</div>
+            <p class="review-card__text" style="margin-top: 8px;">${r.text}</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Helper functions...
+    function changeGalleryImage(thumbEl, imgUrl) {
+      document.getElementById('main-gallery-img').src = imgUrl;
+      document.querySelectorAll('.gallery__thumb').forEach(el => el.classList.remove('gallery__thumb--active'));
+      thumbEl.classList.add('gallery__thumb--active');
+    }
+
+    function adjustQty(amount) {
+      const qtyInput = document.getElementById('detail-qty');
+      let currentVal = parseInt(qtyInput.value);
+      currentVal = Math.max(1, currentVal + amount);
+      qtyInput.value = currentVal;
+    }
+
+    function toggleAccordion(el) {
+      el.classList.toggle('accordion__item--active');
+    }
+
+    function renderRelatedProducts(category, excludeId) {
+      const grid = document.getElementById('related-products-grid');
+      if (!grid || !window.mockDB) return;
+
+      const related = window.mockDB.products
+        .filter(p => p.category === category && p.id !== excludeId)
+        .slice(0, 4);
+
+      if (related.length === 0) {
+        grid.parentElement.style.display = 'none';
+        return;
+      }
+
+      grid.innerHTML = related.map(product => {
+        const imgSecondary = product.images[1] || product.image;
+        const saleBadge = product.oldPrice ? `<span class="badge badge--sale" style="font-size: 0.65rem; padding: 2px 6px;">-${Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%</span>` : '';
+        const oldPriceHtml = product.oldPrice ? `<span class="product-card__old-price">${product.oldPrice.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN</span>` : '';
+        
+        return `
+          <div class="product-card">
+            <a href="/${window.mockDB.categories.find(c => c.id === product.category).slug}/${product.slug}/">
+              <div class="product-card__image-container">
+                <div class="product-card__rating-badge">⭐ ${product.rating}</div>
+                <img class="product-card__image product-card__image-primary" src="${product.image}">
+                <img class="product-card__image product-card__image-secondary" src="${imgSecondary}">
+              </div>
+            </a>
+            <div class="product-card__actions">
+              <button class="btn btn--primary btn--sm product-card__quick-add btn--full" onclick="addToCart('${product.id}', 1)">
+                Səbətə At
+              </button>
+            </div>
+            <div class="product-card__content">
+              <div class="product-card__category">${window.mockDB.categories.find(c => c.id === product.category).name}</div>
+              <h3 class="product-card__title">
+                <a href="/${window.mockDB.categories.find(c => c.id === product.category).slug}/${product.slug}/">${product.title}</a>
+              </h3>
+              <div class="product-card__price-wrapper" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span class="product-card__price">${product.price.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN</span>
+                ${oldPriceHtml}
+                ${saleBadge}
+              </div>
+            </div>
+            <div class="product-card__producer-footer">
+              <img class="product-card__producer-footer-img" src="${product.producerImage}" alt="${product.producer}">
+              <div class="product-card__producer-footer-info">
+                <span class="product-card__producer-footer-label">İstehsalçı</span>
+                <span class="product-card__producer-footer-name">${product.producer}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  </script>
+</body>
+</html>

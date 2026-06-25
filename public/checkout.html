@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sifarişin Rəsmiləşdirilməsi | Kənd Bazarı</title>
+  <meta name="description" content="Kənd Bazarı sifariş rəsmiləşdirilməsi. Çatdırılma və əlaqə məlumatlarınızı daxil edərək sifarişi tamamlayın.">
+  <meta property="og:title" content="Sifarişin Rəsmiləşdirilməsi | Kənd Bazarı">
+  <meta property="og:description" content="Kənd Bazarı sifariş rəsmiləşdirilməsi. Çatdırılma və əlaqə məlumatlarınızı daxil edərək sifarişi tamamlayın.">
+  <meta property="og:type" content="website">
+  
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1.8fr 1.2fr;
+      gap: var(--spacing-xxl);
+      margin-top: var(--spacing-xl);
+    }
+
+    .checkout-section {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .checkout-section__title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: var(--spacing-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .checkout-section__title span {
+      background-color: var(--primary);
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-md);
+    }
+
+    .checkout-summary {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xl);
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+    }
+
+    .checkout-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .checkout-item__details {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .checkout-item__img {
+      width: 50px;
+      height: 50px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+    }
+
+    .checkout-item__img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .summary-totals {
+      border-top: 1px solid var(--border-light);
+      padding-top: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+    }
+
+    @media (max-width: 992px) {
+      .checkout-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__container">
+      <a href="/" class="logo">
+        Kənd<span>Bazarı</span>
+      </a>
+
+      <div style="display: flex; align-items: center; gap: var(--spacing-lg);">
+        <!-- Theme Toggle Button -->
+        <button class="action-btn theme-toggle-btn" aria-label="Temanı Dəyiş" id="theme-toggle-btn">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        </button>
+
+        <div style="font-family: var(--font-display); font-weight: 500; font-size: 0.95rem; color: var(--text-muted);">
+          🔒 Təhlükəsiz Sifariş
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container section-padding">
+    <h1 style="font-family: var(--font-display); font-size: 2.2rem; font-weight: 800; margin-bottom: var(--spacing-md);">Sifarişin Rəsmiləşdirilməsi</h1>
+
+    <form class="checkout-layout" id="checkout-form" onsubmit="handleCheckout(event)">
+      <!-- Left: Delivery Address Form -->
+      <div>
+        <div class="checkout-section">
+          <h2 class="checkout-section__title"><span>✓</span> Çatdırılma Məlumatları</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="firstname">Adı</label>
+              <input type="text" id="firstname" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="lastname">Soyadı</label>
+              <input type="text" id="lastname" class="form-input" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="phone">Telefon Nömrəsi</label>
+            <input type="tel" id="phone" class="form-input" placeholder="+994 50 123 4567" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="city">Şəhər / Rayon</label>
+            <input type="text" id="city" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="address">Çatdırılma Ünvanı</label>
+            <textarea id="address" class="form-input" rows="3" placeholder="Küçə, bina, mənzil məlumatları..." style="resize: none;" required></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Summary Sidebar -->
+      <div class="checkout-summary">
+        <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-sm); border-bottom: 1px solid var(--border-light);">
+          Sifariş Xülasəsi
+        </h3>
+
+        <div id="checkout-items-list" style="margin-bottom: var(--spacing-lg);">
+          <!-- Dynamic items -->
+        </div>
+
+        <div class="summary-totals">
+          <div class="summary-row">
+            <span>Məbləğ</span>
+            <span id="checkout-subtotal">0,00 AZN</span>
+          </div>
+          <div class="summary-row">
+            <span>Çatdırılma</span>
+            <span>Pulsuz</span>
+          </div>
+          <div class="summary-row summary-row--total">
+            <span>Cəmi Ödəniş</span>
+            <span id="checkout-total">0,00 AZN</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--full" style="margin-top: var(--spacing-lg); height: 52px; border-radius: var(--radius-md);">
+          Sifarişi Tamamla
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <!-- Scripts -->
+  <script src="/js/db.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await window.initDb();
+      const cart = window.getCart();
+      if (cart.length === 0) {
+        window.location.href = '/cart/';
+        return;
+      }
+
+      const itemsList = document.getElementById('checkout-items-list');
+      itemsList.innerHTML = cart.map(item => `
+        <div class="checkout-item">
+          <div class="checkout-item__details">
+            <div class="checkout-item__img">
+              <img src="${item.image}" alt="${item.title}">
+            </div>
+            <div>
+              <div style="font-weight: 600; font-size: 0.9rem;">${item.title}</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">${item.quantity} ədəd</div>
+            </div>
+          </div>
+          <div style="font-weight: 700; font-size: 0.95rem;">
+            ${(item.price * item.quantity).toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN
+          </div>
+        </div>
+      `).join('');
+
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      document.getElementById('checkout-subtotal').textContent = `${subtotal.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN`;
+      document.getElementById('checkout-total').textContent = `${subtotal.toLocaleString('az-AZ', { minimumFractionDigits: 2 })} AZN`;
+    });
+
+    async function handleCheckout(e) {
+      e.preventDefault();
+      
+      const cart = window.getCart();
+      if (cart.length === 0) return;
+
+      const customer = {
+        firstname: document.getElementById('firstname').value.trim(),
+        lastname: document.getElementById('lastname').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        address: document.getElementById('address').value.trim()
+      };
+
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+      try {
+        const response = await fetch('/api/orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            customer,
+            items: cart,
+            total: subtotal
+          })
+        });
+
+        if (response.ok) {
+          window.clearCart();
+          window.location.href = '/success/';
+        } else {
+          const resData = await response.json();
+          alert(resData.error || 'Sifariş göndərilərkən xəta baş verdi!');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Şəbəkə xətası! Sifariş göndərilə bilmədi.');
+      }
+    }
+  </script>
+</body>
+</html>

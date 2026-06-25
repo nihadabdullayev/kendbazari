@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sifarişiniz Qəbul Edildi | Kənd Bazarı</title>
+  <meta name="description" content="Sifarişiniz uğurla qəbul edildi. Kənd Bazarı platformasından alış-veriş etdiyiniz üçün təşəkkür edirik.">
+  <meta property="og:title" content="Sifarişiniz Qəbul Edildi | Kənd Bazarı">
+  <meta property="og:description" content="Sifarişiniz uğurla qəbul edildi. Kənd Bazarı platformasından alış-veriş etdiyiniz üçün təşəkkür edirik.">
+  <meta property="og:type" content="website">
+  
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    .success-container {
+      max-width: 600px;
+      margin: 60px auto;
+      text-align: center;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-xxl);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .success-icon {
+      font-size: 4rem;
+      color: var(--success);
+      margin-bottom: var(--spacing-lg);
+      animation: bounce 1s ease infinite alternate;
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-10px); }
+    }
+
+    .order-number {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      font-family: monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin: var(--spacing-lg) 0;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__container" style="justify-content: center;">
+      <a href="/" class="logo">
+        Kənd<span>Bazarı</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="success-container">
+      <div class="success-icon">🎉</div>
+      
+      <h1 style="font-family: var(--font-display); font-size: 2rem; font-weight: 800; line-height: 1.2;">Sifarişiniz Uğurla Qəbul Edildi!</h1>
+      <p style="color: var(--text-secondary); margin-top: var(--spacing-sm); line-height: 1.6;">Bizdən alış-veriş etdiyiniz üçün təşəkkür edirik. Sifariş detalları və çatdırılma məlumatları yaxın vaxtda telefon nömrənizə və ya e-poçtunuza göndəriləcəkdir.</p>
+
+      <div>
+        <span class="order-number" id="order-num-placeholder">KB-992834</span>
+      </div>
+
+      <div style="margin: var(--spacing-xl) 0; border-top: 1px solid var(--border-light); padding-top: var(--spacing-lg); text-align: left; font-size: 0.95rem; display: flex; flex-direction: column; gap: var(--spacing-sm);">
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--text-muted);">Təxmini Çatdırılma:</span>
+          <span style="font-weight: 600;" id="delivery-date-placeholder">28 İyun 2026</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--text-muted);">Çatdırılma Üsulu:</span>
+          <span style="font-weight: 600;">Kuryer Çatdırılması (Pulsuz)</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
+        <a href="/butun-mehsullar/" class="btn btn--primary btn--full">Alış-verişə Davam Et</a>
+        <a href="/" class="btn btn--secondary btn--full">Ana Səhifəyə Qayıt</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" style="margin-top: var(--spacing-xxl);">
+    <div class="container" style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+      <p>&copy; 2026 Kənd Bazarı. Bütün hüquqlar qorunur.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const randNum = Math.floor(100000 + Math.random() * 900000);
+      document.getElementById('order-num-placeholder').textContent = `KB-${randNum}`;
+
+      const options = { day: 'numeric', month: 'long', year: 'numeric' };
+      const deliveryDate = new Date();
+      deliveryDate.setDate(deliveryDate.getDate() + 2); // Kənd məhsulu tez gəlir (2 gün)
+      document.getElementById('delivery-date-placeholder').textContent = deliveryDate.toLocaleDateString('az-AZ', options);
+    });
+  </script>
+</body>
+</html>
