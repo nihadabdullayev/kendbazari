@@ -367,4 +367,8 @@ button, input, select, textarea {
     gap: var(--spacing-md);
     text-align: center;
   }
+
+  input, select, textarea {
+    font-size: 16px !important;
+  }
 }
