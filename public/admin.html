@@ -785,7 +785,7 @@
       window.fetch = function(input, init) {
         if (typeof input === 'string' && input.startsWith('/api/')) {
           const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-          const baseUrl = isLocal ? '' : 'https://kendbazari-backend.onrender.com';
+          const baseUrl = isLocal ? '' : 'https://kendbazari.onrender.com';
           input = baseUrl + input;
         }
         return originalFetch(input, init);
