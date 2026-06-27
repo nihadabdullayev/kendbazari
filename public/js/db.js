@@ -23,7 +23,7 @@ window.fallbackDB = {
       heroImage: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=1600&q=80',
       bio: 'Məmməd əmi 30 ildən çoxdur ki, Gədəbəyin dağ yamaclarında arıçılıqla məşğul olur. Onun arıları yalnız təbii dağ çiçəklərindən şirə toplayır. Hər mövsüm yüzlərlə arı ailəsini əllə idarə edən Məmməd əmi, balın keyfiyyəti üçün heç vaxt güzəştə getmir. Ailə ənənəsini nəsildən-nəslə ötürməyə çalışır.',
       gallery: [
-        'https://images.unsplash.com/photo-1471947186976-2527e979a036?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&w=800&q=80',
         'https://images.unsplash.com/photo-1518317519338-e9aca0ba88a9?auto=format&fit=crop&w=800&q=80',
         'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&w=800&q=80',
         'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=800&q=80'
@@ -128,7 +128,7 @@ window.fallbackDB = {
       since: 1990,
       specialty: 'Yaylaq Pendiri və Qoyunçuluq',
       image: '/images/producers/kamil_dayi.png',
-      heroImage: 'https://images.unsplash.com/photo-1486887396153-fa416525c108?auto=format&fit=crop&w=1600&q=80',
+      heroImage: 'https://images.unsplash.com/photo-1532634922-8fe0b757fb13?auto=format&fit=crop&w=1600&q=80',
       bio: 'Kamil dayı Qusarın yüksək yaylaqlarında qoyunçuluqla məşğuldur. Səbət pendirini qədim ailə resepti ilə yalnız saf yaylaq südündən hazırlayır. 35 illik sürü sahibi olan Kamil dayı hər yay ailə ilə birlikdə yaylağa çıxır. Onun pendirləri Qusarın simvolu sayılır.',
       gallery: [
         'https://images.unsplash.com/photo-1452195100486-9cc805987862?auto=format&fit=crop&w=800&q=80',
@@ -189,7 +189,7 @@ window.fallbackDB = {
     },
     { 
       id: 'produce',
-      slug: 'meybe-tereevez',
+      slug: 'meyve-terevez',
       name: 'Meyvə və Tərəvəz', 
       icon: '🍎',
       subcategories: ['Meyvə', 'Tərəvəz', 'Göyərti', 'Quru Meyvələr'],
@@ -228,7 +228,7 @@ window.fallbackDB = {
       image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=600&q=80',
       images: [
         'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=600&q=80',
-        'https://images.unsplash.com/photo-1471947186976-2527e979a036?auto=format&fit=crop&w=600&q=80'
+        'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&w=600&q=80'
       ],
       description: 'Gədəbəyin yüksək dağlıq zonalarında, tamamilə təbii çiçəklərdən toplanmış xalis süzmə bal. Heç bir qatqı, şəkər şərbəti və ya konservant əlavə edilməyib. Laboratoriya analizlərindən keçmişdir.',
       colors: [
@@ -419,9 +419,9 @@ window.fallbackDB = {
       oldPrice: 16.50,
       rating: 4.7,
       reviewsCount: 64,
-      image: 'https://images.unsplash.com/photo-1486887396153-fa416525c108?auto=format&fit=crop&w=600&q=80',
+      image: 'https://images.unsplash.com/photo-1532634922-8fe0b757fb13?auto=format&fit=crop&w=600&q=80',
       images: [
-        'https://images.unsplash.com/photo-1486887396153-fa416525c108?auto=format&fit=crop&w=600&q=80'
+        'https://images.unsplash.com/photo-1532634922-8fe0b757fb13?auto=format&fit=crop&w=600&q=80'
       ],
       description: 'Qusar yaylaqlarında otlayan qoyunların südündən, xüsusi toxunma səbətlərdə süzülərək hazırlanan duzlu dağ pendiri. 3 ay xüsusi şəraitdə yetişdirilir.',
       colors: [

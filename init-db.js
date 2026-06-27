@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const dbJsPath = path.join(__dirname, 'js', 'db.js');
+const dbJsPath = path.join(__dirname, 'public', 'js', 'db.js');
 const dbJsonDir = path.join(__dirname, 'backend');
 const dbJsonPath = path.join(dbJsonDir, 'database.json');
 
@@ -53,7 +53,7 @@ const blogs = [
     slug: 'esl-kend-pendirini-magaza-pendirinden-nece-ayirmali',
     title: 'Əsl Kənd Pendirini Mağaza Pendirindən Necə Ayırmalı?',
     content: 'Əsl kənd pendiri kəsildikdə içində kiçik hava boşluqları olur və özünəməxsus saf süd ətri verir. Mağaza pendirlərində isə çox vaxt qoruyucular dadı dəyişir.',
-    image: 'https://images.unsplash.com/photo-1486887396153-fa416525c108?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1532634922-8fe0b757fb13?auto=format&fit=crop&w=800&q=80',
     date: '10 İyun 2026'
   },
   {

@@ -494,7 +494,7 @@ app.get('/*splat', (req, res) => {
   const cleanPaths = ['/cart', '/checkout', '/success', '/butun-mehsullar'];
   const isCleanPath = cleanPaths.some(p => req.path.startsWith(p));
   
-  const categories = ['sud-ve-agarti', 'meybe-tereevez', 'bal-ve-murebbeler', 'un-ve-taxil'];
+  const categories = ['sud-ve-agarti', 'meyve-terevez', 'bal-ve-murebbeler', 'un-ve-taxil'];
   const isCategoryOrProduct = categories.some(cat => req.path.startsWith(`/${cat}`));
 
   if (req.path.startsWith('/admin')) {

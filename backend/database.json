@@ -5,56 +5,56 @@
       "slug": "sud-ve-agarti",
       "name": "Süd və Ağartı",
       "icon": "🥛",
-      "descriptionTop": "Təmiz dağ havasında, təbii otlarla bəslənən inək, qoyun və keçilərin saf südündən ənənəvi üsullarla hazırlanan kənd südü, nehrə yağı, səbət pendiri, süzmə və şor məhsulları. Hər gün təzə və təbii.",
-      "descriptionBottom": "Süd və ağartı məhsullarımız tamamilə kənd şəraitində, heç bir kimyəvi qoruyucu və ya dadlandırıcı qatqı əlavə edilmədən hazırlanır. İsmayıllı, Qusar və digər rayonlarımızın zəngin yaylaqlarından süfrənizə gələn bu nemətlər kalsium və zülal mənbəyidir. Uşaqların qidalanması və sağlam yaşam üçün idealdır.",
       "subcategories": [
         "Süd",
         "Qatıq & Süzmə",
         "Pendir",
         "Yağ & Qaymaq"
-      ]
+      ],
+      "descriptionTop": "Təmiz dağ havasında, təbii otlarla bəslənən inək, qoyun və keçilərin saf südündən ənənəvi üsullarla hazırlanan kənd südü, nehrə yağı, səbət pendiri, süzmə və şor məhsulları. Hər gün təzə və təbii.",
+      "descriptionBottom": "Süd və ağartı məhsullarımız tamamilə kənd şəraitində, heç bir kimyəvi qoruyucu və ya dadlandırıcı qatqı əlavə edilmədən hazırlanır. İsmayıllı, Qusar və digər rayonlarımızın zəngin yaylaqlarından süfrənizə gələn bu nemətlər kalsium və zülal mənbəyidir. Uşaqların qidalanması və sağlam yaşam üçün idealdır."
     },
     {
       "id": "produce",
-      "slug": "meybe-tereevez",
+      "slug": "meyve-terevez",
       "name": "Meyvə və Tərəvəz",
       "icon": "🍎",
-      "descriptionTop": "Azərbaycanın ən məhsuldar rayonlarından, birbaşa kəndli bağlarından toplanmış təzə meyvə, tərəvəz və göyərtilər. Süni gübrəsiz, təbii günəş altında yetişmiş ləzzətli kənd məhsulları.",
-      "descriptionBottom": "Meyvə və tərəvəzlərimiz hər səhər tezdən yığılaraq gün ərzində xüsusi soyuduculu avtomobillərlə ünvanınıza çatdırılır. Şəmkir pomidoru, Gədəbəy kartofu kimi məşhur kənd nemətlərimiz vitaminsiz qalmamağınız üçün ən təbii seçimdir.",
       "subcategories": [
         "Meyvə",
         "Tərəvəz",
         "Göyərti",
         "Quru Meyvələr"
-      ]
+      ],
+      "descriptionTop": "Azərbaycanın ən məhsuldar rayonlarından, birbaşa kəndli bağlarından toplanmış təzə meyvə, tərəvəz və göyərtilər. Süni gübrəsiz, təbii günəş altında yetişmiş ləzzətli kənd məhsulları.",
+      "descriptionBottom": "Meyvə və tərəvəzlərimiz hər səhər tezdən yığılaraq gün ərzində xüsusi soyuduculu avtomobillərlə ünvanınıza çatdırılır. Şəmkir pomidoru, Gədəbəy kartofu kimi məşhur kənd nemətlərimiz vitaminsiz qalmamağınız üçün ən təbii seçimdir."
     },
     {
       "id": "honey-jam",
       "slug": "bal-ve-murebbeler",
       "name": "Bal və Mürəbbələr",
       "icon": "🍯",
-      "descriptionTop": "Gədəbəy, Qax və Qəbələnin zəngin meşə və dağ bitkilərindən toplanmış 100% xalis süzmə bal, təbii petək balı və ev üsulu ilə şəkər balansı qorunaraq bişirilmiş ləzzətli mürəbbələr.",
-      "descriptionBottom": "Təbii bal və mürəbbələrimiz immun sistemini gücləndirən, soyuqdəyməyə qarşı mükəmməl təbii vasitədir. Leyla xala, Məmməd əmi kimi təcrübəli kənd istehsalçılarımız tərəfindən ənənəvi ev reseptləri əsasında hazırlanan bu şirniyyatlar çay süfrələrinizə xüsusi ləzzət qatacaq.",
       "subcategories": [
         "Bal",
         "Mürəbbə",
         "Cem",
         "Şərbət"
-      ]
+      ],
+      "descriptionTop": "Gədəbəy, Qax və Qəbələnin zəngin meşə və dağ bitkilərindən toplanmış 100% xalis süzmə bal, təbii petək balı və ev üsulu ilə şəkər balansı qorunaraq bişirilmiş ləzzətli mürəbbələr.",
+      "descriptionBottom": "Təbii bal və mürəbbələrimiz immun sistemini gücləndirən, soyuqdəyməyə qarşı mükəmməl təbii vasitədir. Leyla xala, Məmməd əmi kimi təcrübəli kənd istehsalçılarımız tərəfindən ənənəvi ev reseptləri əsasında hazırlanan bu şirniyyatlar çay süfrələrinizə xüsusi ləzzət qatacaq."
     },
     {
       "id": "bakery-grains",
       "slug": "un-ve-taxil",
       "name": "Un və Taxıl",
       "icon": "🌾",
-      "descriptionTop": "Daş dəyirmanda üyüdülmüş undan, təbii mayalanma üsulu ilə gil təndirdə odun atəşində bişirilmiş ətirli kənd çörəkləri, əl kəsimi ev əriştəsi və digər taxıl məhsulları.",
-      "descriptionBottom": "Un və taxıl məhsullarımız liflərlə zəngin olub, həzm sisteminə olduqca faydalıdır. Qədim üsullarla hazırlanan təbii çörək və əriştələrimiz süfrənizə kənd təbiiliyini gətirir.",
       "subcategories": [
         "Çörək",
         "Un",
         "Dənli Bitkilər",
         "Əriştə & Makaron"
-      ]
+      ],
+      "descriptionTop": "Daş dəyirmanda üyüdülmüş undan, təbii mayalanma üsulu ilə gil təndirdə odun atəşində bişirilmiş ətirli kənd çörəkləri, əl kəsimi ev əriştəsi və digər taxıl məhsulları.",
+      "descriptionBottom": "Un və taxıl məhsullarımız liflərlə zəngin olub, həzm sisteminə olduqca faydalıdır. Qədim üsullarla hazırlanan təbii çörək və əriştələrimiz süfrənizə kənd təbiiliyini gətirir."
     }
   ],
   "products": [
@@ -70,7 +70,7 @@
       "image": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=600&q=80",
       "images": [
         "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=600&q=80",
-        "https://images.unsplash.com/photo-1471947186976-2527e979a036?auto=format&fit=crop&w=600&q=80"
+        "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&w=600&q=80"
       ],
       "description": "Gədəbəyin yüksək dağlıq zonalarında, tamamilə təbii çiçəklərdən toplanmış xalis süzmə bal. Heç bir qatqı, şəkər şərbəti və ya konservant əlavə edilməyib. Laboratoriya analizlərindən keçmişdir.",
       "colors": [
@@ -298,9 +298,9 @@
       "oldPrice": 16.5,
       "rating": 4.7,
       "reviewsCount": 64,
-      "image": "https://images.unsplash.com/photo-1486887396153-fa416525c108?auto=format&fit=crop&w=600&q=80",
+      "image": "https://images.unsplash.com/photo-1532634922-8fe0b757fb13?auto=format&fit=crop&w=600&q=80",
       "images": [
-        "https://images.unsplash.com/photo-1486887396153-fa416525c108?auto=format&fit=crop&w=600&q=80"
+        "https://images.unsplash.com/photo-1532634922-8fe0b757fb13?auto=format&fit=crop&w=600&q=80"
       ],
       "description": "Qusar yaylaqlarında otlayan qoyunların südündən, xüsusi toxunma səbətlərdə süzülərək hazırlanan duzlu dağ pendiri. 3 ay xüsusi şəraitdə yetişdirilir.",
       "colors": [
@@ -415,7 +415,7 @@
       "heroImage": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=1600&q=80",
       "bio": "Məmməd əmi 30 ildən çoxdur ki, Gədəbəyin dağ yamaclarında arıçılıqla məşğul olur. Onun arıları yalnız təbii dağ çiçəklərindən şirə toplayır. Hər mövsüm yüzlərlə arı ailəsini əllə idarə edən Məmməd əmi, balın keyfiyyəti üçün heç vaxt güzəştə getmir. Ailə ənənəsini nəsildən-nəslə ötürməyə çalışır.",
       "gallery": [
-        "https://images.unsplash.com/photo-1471947186976-2527e979a036?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&w=800&q=80",
         "https://images.unsplash.com/photo-1518317519338-e9aca0ba88a9?auto=format&fit=crop&w=800&q=80",
         "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&w=800&q=80",
         "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=800&q=80"
@@ -544,7 +544,7 @@
       "since": 1990,
       "specialty": "Yaylaq Pendiri və Qoyunçuluq",
       "image": "/images/producers/kamil_dayi.png",
-      "heroImage": "https://images.unsplash.com/photo-1486887396153-fa416525c108?auto=format&fit=crop&w=1600&q=80",
+      "heroImage": "https://images.unsplash.com/photo-1532634922-8fe0b757fb13?auto=format&fit=crop&w=1600&q=80",
       "bio": "Kamil dayı Qusarın yüksək yaylaqlarında qoyunçuluqla məşğuldur. Səbət pendirini qədim ailə resepti ilə yalnız saf yaylaq südündən hazırlayır. 35 illik sürü sahibi olan Kamil dayı hər yay ailə ilə birlikdə yaylağa çıxır. Onun pendirləri Qusarın simvolu sayılır.",
       "gallery": [
         "https://images.unsplash.com/photo-1452195100486-9cc805987862?auto=format&fit=crop&w=800&q=80",
@@ -604,45 +604,7 @@
       ]
     }
   ],
-  "orders": [
-    {
-      "id": "KB-ORD-468922",
-      "customer": {
-        "firstname": "nihad",
-        "lastname": "abdullayev",
-        "phone": "0504771699",
-        "city": "bakı",
-        "address": "hövsan mida 1, bina 6 mertebe 1 menzil 1"
-      },
-      "items": [
-        {
-          "id": "p3",
-          "title": "Təbii Kənd Yumurtası (Ədəd)",
-          "price": 0.35,
-          "image": "https://images.unsplash.com/photo-1516448620398-c5f44bf9f441?auto=format&fit=crop&w=600&q=80",
-          "options": {
-            "packaging": "Karton Qutu",
-            "size": "10 Ədəd"
-          },
-          "quantity": 1
-        },
-        {
-          "id": "p4",
-          "title": "Şəmkir Pomidoru (Şirin)",
-          "price": 3.2,
-          "image": "https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&w=600&q=80",
-          "options": {
-            "packaging": "Taxta Səbət",
-            "size": "1 kq"
-          },
-          "quantity": 1
-        }
-      ],
-      "total": 3.5500000000000003,
-      "status": "Yoldadır",
-      "createdAt": "2026-06-25T13:57:44.213Z"
-    }
-  ],
+  "orders": [],
   "adminUsers": [
     {
       "username": "admin",
@@ -809,7 +771,7 @@
       "slug": "esl-kend-pendirini-magaza-pendirinden-nece-ayirmali",
       "title": "Əsl Kənd Pendirini Mağaza Pendirindən Necə Ayırmalı?",
       "content": "Əsl kənd pendiri kəsildikdə içində kiçik hava boşluqları olur və özünəməxsus saf süd ətri verir. Mağaza pendirlərində isə çox vaxt qoruyucular dadı dəyişir.",
-      "image": "https://images.unsplash.com/photo-1486887396153-fa416525c108?auto=format&fit=crop&w=800&q=80",
+      "image": "https://images.unsplash.com/photo-1532634922-8fe0b757fb13?auto=format&fit=crop&w=800&q=80",
       "date": "10 İyun 2026"
     },
     {
